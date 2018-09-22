@@ -20,22 +20,3 @@ public class MongoApplication {
 	}
 
 }
-
-interface OrderRepository extends ReactiveMongoRepository<Order, String> {
-
-	@Tailable
-	Flux<Order> findByProductId(String pid);
-
-}
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Order {
-
-	@Id
-	private String id;
-
-	private String productId;
-
-}
