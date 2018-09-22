@@ -20,8 +20,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
-	* @author <a href="mailto:josh@joshlong.com">Josh Long</a>
-	*/
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
+ */
 @Log4j2
 @DataMongoTest
 @RunWith(SpringRunner.class)
@@ -35,17 +35,13 @@ public class MongoApplicationTest {
 
 	@Before
 	public void start() {
-
-		Mono<MongoCollection<Document>> recreateCollection = operations.collectionExists(Order.class) //
-			.flatMap(exists -> exists ? operations.dropCollection(Order.class) : Mono.just(exists)) //
-			.then(operations.createCollection(Order.class, CollectionOptions.empty() //
-				.size(1024 * 1024)
-				.maxDocuments(100)
-				.capped()));
-		StepVerifier
-			.create(recreateCollection)
-			.expectNextCount(1)
-			.verifyComplete();
+		Mono<MongoCollection<Document>> recreateCollection = operations
+				.collectionExists(Order.class)
+				.flatMap(exists -> exists ? operations.dropCollection(Order.class)
+						: Mono.just(exists))
+				.then(operations.createCollection(Order.class, CollectionOptions.empty()
+						.size(1024 * 1024).maxDocuments(100).capped()));
+		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 
 	@Test
@@ -53,22 +49,19 @@ public class MongoApplicationTest {
 		Queue<Order> people = new ConcurrentLinkedQueue<>();
 		this.writeAndWait();
 		this.writeAndWait();
-		this.repository.findByProductId("1")
-			.doOnNext(x -> {
-				log.info("found: " + x.toString());
-				people.add(x);
-			})
-			.doOnComplete(() -> log.info("complete"))
-			.doOnTerminate(() -> log.info("terminated"))
-			.subscribe();
+		this.repository.findByProductId("1").doOnNext(x -> {
+			log.info("found: " + x.toString());
+			people.add(x);
+		}).doOnComplete(() -> log.info("complete"))
+				.doOnTerminate(() -> log.info("terminated")).subscribe();
 		this.writeAndWait();
 		Assertions.assertThat(people).hasSize(3);
 	}
 
 	private void writeAndWait() throws InterruptedException {
-		StepVerifier.create(repository.save(new Order(UUID.randomUUID().toString(), "1"))) //
-			.expectNextCount(1) //
-			.verifyComplete();
+		StepVerifier.create(repository.save(new Order(UUID.randomUUID().toString(), "1")))
+				.expectNextCount(1).verifyComplete();
 		Thread.sleep(100);
 	}
+
 }

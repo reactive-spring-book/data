@@ -26,12 +26,14 @@ public class MongoApplication {
 	public static void main(String args[]) throws IOException {
 		SpringApplication.run(MongoApplication.class, args);
 	}
+
 }
 
 interface OrderRepository extends ReactiveMongoRepository<Order, String> {
 
 	@Tailable
 	Flux<Order> findByProductId(String pid);
+
 }
 
 @Data
@@ -43,4 +45,5 @@ class Order {
 	private String id;
 
 	private String productId;
+
 }
