@@ -19,9 +19,6 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @Log4j2
 @DataMongoTest
 @RunWith(SpringRunner.class)
