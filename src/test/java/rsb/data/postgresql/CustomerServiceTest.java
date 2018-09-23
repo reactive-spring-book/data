@@ -1,10 +1,12 @@
 package rsb.data.postgresql;
 
+import io.r2dbc.postgresql.PostgresqlResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 /**
@@ -19,8 +21,15 @@ public class CustomerServiceTest {
 
 	@Test
 	public void all() {
-		StepVerifier.create(this.customerService.all()).expectNextCount(2)
-				.verifyComplete();
+
+		Flux<PostgresqlResult> resultFlux = Flux
+				.from(this.customerService.create(1L, "first@email.com"))
+				.thenMany(this.customerService.create(2L, "second@email.com"))
+				.thenMany(this.customerService.create(3L, "third@email.com"));
+
+		Flux<Customer> all = resultFlux.thenMany(this.customerService.all());
+
+		StepVerifier.create(all).expectNextCount(3).verifyComplete();
 	}
 
 }
