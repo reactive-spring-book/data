@@ -1,0 +1,1 @@
+mvn clean spring-javaformat:apply package && git commit -am polish && git push 

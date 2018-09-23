@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Log4j2
 @DataMongoTest
 @RunWith(SpringRunner.class)
-public class MongoApplicationTest {
+public class TailableOrderQueryTest {
 
 	@Autowired
 	private ReactiveMongoTemplate operations;
