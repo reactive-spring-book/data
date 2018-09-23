@@ -28,11 +28,16 @@ public class OrderRepositoryTest {
 		Predicate<Order> predicate = p -> p.getId().equalsIgnoreCase(saved1.getId())
 				|| p.getId().equalsIgnoreCase(saved2.getId());
 
-		StepVerifier.create(saveAll).expectNextMatches(predicate)
-				.expectNextMatches(predicate).verifyComplete();
+		StepVerifier //
+				.create(saveAll) //
+				.expectNextMatches(predicate) //
+				.expectNextMatches(predicate) //
+				.verifyComplete();
 
-		StepVerifier.create(this.orderRepository.findAll()).expectNextMatches(predicate)
-				.expectNextMatches(predicate).verifyComplete();
+		StepVerifier.create(this.orderRepository.findAll()) //
+				.expectNextMatches(predicate) //
+				.expectNextMatches(predicate) //
+				.verifyComplete();
 	}
 
 }
