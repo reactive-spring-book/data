@@ -19,14 +19,18 @@ public class CustomerServiceTest {
 	@Test
 	public void all() {
 
-		Flux<PostgresqlResult> resultFlux = Flux
+		Flux<PostgresqlResult> insert = Flux
 				.from(this.customerService.create(1L, "first@email.com"))
 				.thenMany(this.customerService.create(2L, "second@email.com"))
 				.thenMany(this.customerService.create(3L, "third@email.com"));
 
-		Flux<Customer> all = resultFlux.thenMany(this.customerService.all());
+		Flux<PostgresqlResult> deleteEverything = this.customerService.all()
+				.flatMap(customer -> this.customerService.delete(customer.getId()));
 
-		StepVerifier.create(all).expectNextCount(3).verifyComplete();
+		StepVerifier.create(deleteEverything //
+				.thenMany(insert) //
+				.thenMany(this.customerService.all())//
+		).expectNextCount(3).verifyComplete();
 	}
 
 }

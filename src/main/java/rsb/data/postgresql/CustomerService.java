@@ -16,6 +16,13 @@ class CustomerService {
 		this.connectionFactory = pgc;
 	}
 
+	Flux<PostgresqlResult> delete(Long id) {
+		return this.connectionFactory.create()
+				.flatMapMany(connection -> connection
+						.createStatement("DELETE FROM customers where id = $1")
+						.bind("$1", id).execute());
+	}
+
 	Flux<PostgresqlResult> create(Long id, String email) {
 		return this.connectionFactory.create()
 				.flatMapMany(connection -> connection
