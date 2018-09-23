@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @DataMongoTest
 @RunWith(SpringRunner.class)
@@ -18,14 +19,20 @@ public class OrderRepositoryTest {
 	private OrderRepository orderRepository;
 
 	@Test
-	public void save() throws Exception {
+	public void writeAndRead() {
 
 		Order saved1 = new Order(UUID.randomUUID().toString(), "1");
 		Order saved2 = new Order(UUID.randomUUID().toString(), "2");
 		Flux<Order> saveAll = this.orderRepository.saveAll(Flux.just(saved1, saved2));
 
-		StepVerifier.create(saveAll).expectNext(saved1, saved2).verifyComplete();
+		Predicate<Order> predicate = p -> p.getId().equalsIgnoreCase(saved1.getId())
+				|| p.getId().equalsIgnoreCase(saved2.getId());
 
+		StepVerifier.create(saveAll).expectNextMatches(predicate)
+				.expectNextMatches(predicate).verifyComplete();
+
+		StepVerifier.create(this.orderRepository.findAll()).expectNextMatches(predicate)
+				.expectNextMatches(predicate).verifyComplete();
 	}
 
 }

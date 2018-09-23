@@ -32,12 +32,13 @@ public class TailableOrderQueryTest {
 
 	@Before
 	public void start() {
+		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024)
+				.maxDocuments(100).capped();
 		Mono<MongoCollection<Document>> recreateCollection = operations
 				.collectionExists(Order.class)
 				.flatMap(exists -> exists ? operations.dropCollection(Order.class)
 						: Mono.just(exists))
-				.then(operations.createCollection(Order.class, CollectionOptions.empty()
-						.size(1024 * 1024).maxDocuments(100).capped()));
+				.then(operations.createCollection(Order.class, capped));
 		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 
@@ -46,11 +47,11 @@ public class TailableOrderQueryTest {
 		Queue<Order> people = new ConcurrentLinkedQueue<>();
 		this.writeAndWait();
 		this.writeAndWait();
-		this.repository.findByProductId("1").doOnNext(x -> {
-			log.info("found: " + x.toString());
-			people.add(x);
-		}).doOnComplete(() -> log.info("complete"))
-				.doOnTerminate(() -> log.info("terminated")).subscribe();
+		this.repository.findByProductId("1") //
+				.doOnNext(people::add) //
+				.doOnComplete(() -> log.info("complete")) //
+				.doOnTerminate(() -> log.info("terminated")) //
+				.subscribe();
 		this.writeAndWait();
 		Assertions.assertThat(people).hasSize(3);
 	}
@@ -58,7 +59,7 @@ public class TailableOrderQueryTest {
 	private void writeAndWait() throws InterruptedException {
 		StepVerifier.create(repository.save(new Order(UUID.randomUUID().toString(), "1")))
 				.expectNextCount(1).verifyComplete();
-		Thread.sleep(100);
+		// Thread.sleep(100);
 	}
 
 }
