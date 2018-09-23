@@ -18,17 +18,14 @@ public class OrderRepositoryTest {
 	private OrderRepository orderRepository;
 
 	@Test
-	public void save () throws Exception {
+	public void save() throws Exception {
 
 		Order saved1 = new Order(UUID.randomUUID().toString(), "1");
 		Order saved2 = new Order(UUID.randomUUID().toString(), "2");
-		Flux<Order> saveAll = this.orderRepository
-			.saveAll(Flux.just(saved1, saved2));
+		Flux<Order> saveAll = this.orderRepository.saveAll(Flux.just(saved1, saved2));
 
-		StepVerifier
-			.create( saveAll)
-			.expectNext( saved1 , saved2)
-			.verifyComplete();
+		StepVerifier.create(saveAll).expectNext(saved1, saved2).verifyComplete();
 
 	}
+
 }
