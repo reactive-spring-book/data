@@ -9,9 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerServiceTest {
