@@ -1,5 +1,11 @@
 language: java
 
+services:
+- postgresql
+
+before_script:
+- psql -c 'CREATE DATABASE orders;' -U postgres
+
 sudo: required
 
 jdk:
@@ -11,3 +17,6 @@ cache:
 
 script:
 -  mvn -e verify deploy
+
+env:
+- SPRING_PROFILES_ACTIVE=CI
