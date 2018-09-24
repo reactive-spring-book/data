@@ -31,7 +31,8 @@ public class TailableOrderQueryTest {
 	private OrderRepository repository;
 
 	@Before
-	public void start() {
+	public void start() throws Exception {
+
 		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024)
 				.maxDocuments(100).capped();
 		Mono<MongoCollection<Document>> recreateCollection = operations
@@ -59,7 +60,6 @@ public class TailableOrderQueryTest {
 	private void writeAndWait() throws InterruptedException {
 		StepVerifier.create(repository.save(new Order(UUID.randomUUID().toString(), "1")))
 				.expectNextCount(1).verifyComplete();
-		// Thread.sleep(100);
 	}
 
 }
