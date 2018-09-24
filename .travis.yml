@@ -14,9 +14,9 @@ sudo: required
 jdk:
 - oraclejdk8
 
-#cache:
-#  directories:
-#  - $HOME/.m2/repository/
+cache:
+  directories:
+  - $HOME/.m2/repository/
 
 script:
 -  mvn -e verify deploy
