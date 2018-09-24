@@ -20,20 +20,26 @@ public class PostgresqlApplication {
 
 	@Bean
 	PostgresqlConnectionFactory connectionFactory(
-			@Value("${spring.datasource.url}") String url) {
+		@Value("${spring.datasource.url}") String url) {
 
 		URI uri = URI.create(url);
 		String host = uri.getHost();
-		String user = uri.getUserInfo().split(":")[0];
-		String pw = uri.getUserInfo().split(":")[1];
+		String userInfo = uri.getUserInfo();
+		String user = userInfo, pw = "";
+
+		if (userInfo.contains(":")) {
+			user = userInfo.split(":")[0];
+			pw = userInfo.split(":")[1];
+		}
+
 		String name = uri.getPath().substring(1);
 		PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration
-				.builder() //
-				.database(name) //
-				.host(host) //
-				.username(user) //
-				.password(pw) //
-				.build();
+			.builder() //
+			.database(name) //
+			.host(host) //
+			.username(user) //
+			.password(pw) //
+			.build();
 		return new PostgresqlConnectionFactory(configuration);
 	}
 
