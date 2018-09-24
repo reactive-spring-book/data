@@ -6,7 +6,7 @@ services:
 
 
 before_script:
-- psql -c 'CREATE DATABASE orders;' -U postgres
+- psql -c 'CREATE DATABASE orders; CREATE TABLE customers( id bigint not null, email varchar(255) not null);' -U postgres
 
 sudo: required
 
