@@ -2,6 +2,8 @@ language: java
 
 services:
 - postgresql
+- mongodb
+
 
 before_script:
 - psql -c 'CREATE DATABASE orders;' -U postgres
