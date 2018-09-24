@@ -2,7 +2,7 @@ language: java
 
 services:
 - postgresql
-- mongodb
+#- mongodb
 
 
 before_script:
