@@ -20,7 +20,7 @@ public class PostgresqlApplication {
 
 	@Bean
 	PostgresqlConnectionFactory connectionFactory(
-		@Value("${spring.datasource.url}") String url) {
+			@Value("${spring.datasource.url}") String url) {
 
 		URI uri = URI.create(url);
 		String host = uri.getHost();
@@ -34,12 +34,12 @@ public class PostgresqlApplication {
 
 		String name = uri.getPath().substring(1);
 		PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration
-			.builder() //
-			.database(name) //
-			.host(host) //
-			.username(user) //
-			.password(pw) //
-			.build();
+				.builder() //
+				.database(name) //
+				.host(host) //
+				.username(user) //
+				.password(pw) //
+				.build();
 		return new PostgresqlConnectionFactory(configuration);
 	}
 
