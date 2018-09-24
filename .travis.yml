@@ -21,4 +21,4 @@ script:
 -  mvn -e verify deploy
 
 env:
-- SPRING_PROFILES_ACTIVE=CI
+- SPRING_PROFILES_ACTIVE=ci
