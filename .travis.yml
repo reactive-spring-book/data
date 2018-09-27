@@ -4,18 +4,17 @@ services:
 - postgresql
 - mongodb
 
-
 before_script:
 # Install the DDL for the PostgreSQL database
 - psql -c 'CREATE DATABASE orders;' -U postgres
 - psql -c 'CREATE TABLE customers( id bigint not null, email varchar(255) not null );' -U postgres orders
 # Make MongoDB a single node replica
-- echo "replSet = myReplSetName" | sudo tee -a /etc/mongodb.conf
-- ls -la /etc/init.d/
-- /etc/init.d/mongo  stop
-- sleep 20
-- mongo --eval 'rs.initiate()'
-- sleep 15
+#- echo "replSet = myReplSetName" | sudo tee -a /etc/mongodb.conf
+#- ls -la /etc/init.d/
+#- /etc/init.d/mongo  stop
+#- sleep 20
+#- mongo --eval 'rs.initiate()'
+#- sleep 15
 
 
 sudo: required
@@ -32,3 +31,4 @@ script:
 
 env:
 - SPRING_PROFILES_ACTIVE=ci
+- MONGODB_VERSION=4.0.0
