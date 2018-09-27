@@ -11,6 +11,6 @@ tar xfz ${TGZ_FILE}
 export PATH=`pwd`/${FOLDER}/bin:$PATH
 
 mkdir -p ${DATA}
-mongod --replSet my-replica-set --dbpath $DATA &
+mongod --replSet my-replica-set --dbpath ${DATA} &
 sleep 10
 mongo --eval "rs.initiate()"

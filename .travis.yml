@@ -6,9 +6,8 @@ services:
 
 before_script:
 # Install the DDL for the PostgreSQL database
-- psql -c 'CREATE DATABASE orders;' -U postgres
-- psql -c 'CREATE TABLE customers( id bigint not null, email varchar(255) not null );' -U postgres orders
-- ./mongodb-install.sh
+- src/test/ci/bin/setup-mongodb.sh
+- src/test/ci/bin/setup-postgresql.sh
 
 sudo: required
 
