@@ -24,7 +24,7 @@ public class OrderRepositoryTest {
 	private ReactiveMongoTemplate reactiveMongoTemplate;
 
 	@Before
-	public void begin() throws Exception {
+	public void before() throws Exception {
 		StepVerifier.create(this.reactiveMongoTemplate.dropCollection(Order.class))
 				.verifyComplete();
 	}
