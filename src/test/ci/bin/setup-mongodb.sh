@@ -28,4 +28,4 @@ mkdir -p ${DATA}
 ${BIN}/mongod --replSet my-replica-set --dbpath ${DATA} &
 sleep 5
 ${BIN}/mongo --eval "rs.initiate()"
-
+sleep 5
