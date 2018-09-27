@@ -1,16 +1,29 @@
 #!/usr/bin/env bash
 
+URL=""
+if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    URL=http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-4.0.2.tgz
+else
+    URL=http://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.2.tgz
+fi
 
-MONGODB_VERSION=4.0.0
-DATA=$HOME/data/db
-FOLDER=mongodb-linux-x86_64-${MONGODB_VERSION}
-TGZ_FILE=${FOLDER}.tgz
+TGZ_FILE=archive.tgz
+ls -la ${TGZ_FILE} || curl ${URL} > $TGZ_FILE
+OUT=`pwd`/mongodb
+echo $OUT
 
-wget http://fastdl.mongodb.org/linux/${TGZ_FILE}
-tar xfz ${TGZ_FILE}
-export PATH=`pwd`/${FOLDER}/bin:$PATH
+#mkdir -p ${OUT}
+tar xfz ${TGZ_FILE} -C .
+ls -la
+
+mv mongodb* mongodb
+DATA=`pwd`/data
+mkdir -p ${DATA}
+BIN=`pwd`/mongodb/bin
+export PATH=$BIN:$PATH
 
 mkdir -p ${DATA}
-mongod --replSet my-replica-set --dbpath ${DATA} &
-sleep 10
-mongo --eval "rs.initiate()"
+${BIN}/mongod --replSet my-replica-set --dbpath ${DATA} &
+sleep 5
+${BIN}/mongo --eval "rs.initiate()"
+
