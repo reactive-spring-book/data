@@ -7,6 +7,8 @@ else
     URL=http://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.2.tgz
 fi
 
+echo URL is $URL
+
 TGZ_FILE=archive.tgz
 ls -la ${TGZ_FILE} || curl ${URL} > $TGZ_FILE
 OUT=`pwd`/mongodb
