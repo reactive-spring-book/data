@@ -2,7 +2,7 @@ language: java
 
 services:
 - postgresql
-- mongodb
+#- mongodb
 
 before_script:
 # Install the DDL for the PostgreSQL database
@@ -10,13 +10,6 @@ before_script:
 - psql -c 'CREATE TABLE customers( id bigint not null, email varchar(255) not null );' -U postgres orders
 - ./mongodb-install.sh
 
-# Make MongoDB a single node replica
-#- echo "replSet = myReplSetName" | sudo tee -a /etc/mongodb.conf
-#- ls -la /etc/init.d/
-#- /etc/init.d/mongo  stop
-#- sleep 20
-#- mongo --eval 'rs.initiate()'
-#- sleep 15
 
 
 sudo: required
