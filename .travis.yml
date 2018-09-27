@@ -11,7 +11,7 @@ before_script:
 - psql -c 'CREATE TABLE customers( id bigint not null, email varchar(255) not null );' -U postgres orders
 # Make MongoDB a single node replica
 - echo "replSet = myReplSetName" | sudo tee -a /etc/mongodb.conf
-- sudo /etc/init.d/mongodb stop
+- sudo /etc/init.d/mongo  stop
 - sleep 20
 - mongo --eval 'rs.initiate()'
 - sleep 15
