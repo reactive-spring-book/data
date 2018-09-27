@@ -10,8 +10,6 @@ before_script:
 - psql -c 'CREATE TABLE customers( id bigint not null, email varchar(255) not null );' -U postgres orders
 - ./mongodb-install.sh
 
-
-
 sudo: required
 
 jdk:
@@ -26,4 +24,3 @@ script:
 
 env:
 - SPRING_PROFILES_ACTIVE=ci
-- MONGODB_VERSION=4.0.0

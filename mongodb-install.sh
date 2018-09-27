@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-#- echo "replSet = myReplSetName" | sudo tee -a /etc/mongodb.conf
-#- ls -la /etc/init.d/
-#- /etc/init.d/mongo  stop
-#- sleep 20
-#- mongo --eval 'rs.initiate()'
-#- sleep 15
 
 
+MONGODB_VERSION=4.0.0
 DATA=$HOME/data/db
 FOLDER=mongodb-linux-x86_64-${MONGODB_VERSION}
 TGZ_FILE=${FOLDER}.tgz
@@ -17,4 +12,5 @@ export PATH=`pwd`/${FOLDER}/bin:$PATH
 
 mkdir -p ${DATA}
 mongod --replSet my-replica-set --dbpath $DATA &
+sleep 10
 mongo --eval "rs.initiate()"
