@@ -16,14 +16,13 @@ public class OrderService {
 	}
 
 	public Flux<Order> createOrders(String... productIds) {
-		Flux<Order> orders = Flux.just(productIds).map(x -> new Order(null, x))
-				.flatMap(order -> {
+		return this.template.inTransaction().execute(txTemplate -> Flux.just(productIds)
+				.map(x -> new Order(null, x)).flatMap(order -> {
 					if (order.getProductId().equalsIgnoreCase(BOOM_EXCEPTION)) {
 						throw new IllegalArgumentException(BOOM_EXCEPTION);
 					}
-					return template.insert(order);
-				});
-		return this.template.inTransaction().execute(template -> orders);
+					return txTemplate.insert(order);
+				}));
 	}
 
 }

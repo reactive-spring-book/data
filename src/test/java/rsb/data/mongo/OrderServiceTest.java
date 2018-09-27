@@ -1,5 +1,7 @@
 package rsb.data.mongo;
 
+import com.mongodb.reactivestreams.client.MongoCollection;
+import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 /**
@@ -28,12 +31,14 @@ public class OrderServiceTest {
 	@Autowired
 	private ReactiveMongoTemplate reactiveMongoTemplate;
 
-	@Before
-	public void before() {
-
-		StepVerifier.create(this.reactiveMongoTemplate.dropCollection(Order.class))
-				.verifyComplete();
-	}
+	/*
+	 * @Before public void before() {
+	 *
+	 * Flux<MongoCollection<Document>> publisher =
+	 * this.reactiveMongoTemplate.dropCollection(Order.class)
+	 * .thenMany(this.reactiveMongoTemplate.createCollection(Order.class));
+	 * StepVerifier.create( publisher ) .verifyComplete(); }
+	 */
 
 	@Test
 	public void createOrders() {
