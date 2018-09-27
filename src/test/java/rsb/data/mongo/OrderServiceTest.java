@@ -12,8 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import reactor.test.StepVerifier;
 
 /**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
+	* @author <a href="mailto:josh@joshlong.com">Josh Long</a>
+	*/
 @RunWith(SpringRunner.class)
 @DataMongoTest
 @Import(OrderService.class)
@@ -30,16 +30,17 @@ public class OrderServiceTest {
 
 	@Before
 	public void before() {
+
 		StepVerifier.create(this.reactiveMongoTemplate.dropCollection(Order.class))
-				.verifyComplete();
+			.verifyComplete();
 	}
 
 	@Test
 	public void createOrders() {
 
 		Publisher<Order> orders = this.orderRepository.deleteAll()
-				.thenMany(this.orderService.createOrders("1", "2", "3"))
-				.thenMany(this.orderRepository.findAll());
+			.thenMany(this.orderService.createOrders("1", "2", "3"))
+			.thenMany(this.orderRepository.findAll());
 
 		StepVerifier.create(orders).expectNextCount(3).verifyComplete();
 
@@ -49,14 +50,14 @@ public class OrderServiceTest {
 	public void createOrdersAndFail() {
 
 		Publisher<Order> orders = this.orderRepository.deleteAll()
-				.thenMany(this.orderService.createOrders("1", "2",
-						OrderService.BOOM_EXCEPTION))
-				.thenMany(this.orderRepository.findAll());
+			.thenMany(this.orderService.createOrders("1", "2",
+				OrderService.BOOM_EXCEPTION))
+			.thenMany(this.orderRepository.findAll());
 
 		StepVerifier.create(orders).expectNextCount(0).verifyError();
 
 		StepVerifier.create(this.orderRepository.findAll()).expectNextCount(0)
-				.verifyComplete();
+			.verifyComplete();
 	}
 
 }

@@ -2,14 +2,12 @@ language: java
 
 services:
 - postgresql
-#- mongodb
 
 before_install:
 - src/test/ci/bin/setup-mongodb.sh
 - src/test/ci/bin/setup-postgresql.sh
 
-
-sudo: required
+#sudo: required
 
 jdk:
 - oraclejdk8
@@ -18,7 +16,6 @@ cache:
   directories:
   - $HOME/.m2/repository/
   - downloads
-
 
 script:
 -  mvn -e verify deploy
