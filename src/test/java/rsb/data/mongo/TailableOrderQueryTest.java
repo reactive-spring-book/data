@@ -31,8 +31,7 @@ public class TailableOrderQueryTest {
 	private OrderRepository repository;
 
 	@Before
-	public void start() throws Exception {
-
+	public void start() {
 		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024)
 				.maxDocuments(100).capped();
 		Mono<MongoCollection<Document>> recreateCollection = operations
@@ -44,7 +43,7 @@ public class TailableOrderQueryTest {
 	}
 
 	@Test
-	public void tail() throws Exception {
+	public void tail() {
 		Queue<Order> people = new ConcurrentLinkedQueue<>();
 		this.writeAndWait();
 		this.writeAndWait();
@@ -57,7 +56,7 @@ public class TailableOrderQueryTest {
 		Assertions.assertThat(people).hasSize(3);
 	}
 
-	private void writeAndWait() throws InterruptedException {
+	private void writeAndWait() {
 		StepVerifier.create(repository.save(new Order(UUID.randomUUID().toString(), "1")))
 				.expectNextCount(1).verifyComplete();
 	}

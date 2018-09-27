@@ -1,6 +1,6 @@
 package rsb.data.postgresql;
 
-import io.r2dbc.postgresql.PostgresqlResult;
+import io.r2dbc.spi.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +19,18 @@ public class CustomerServiceTest {
 	@Test
 	public void all() {
 
-		Flux<PostgresqlResult> insert = Flux
-				.from(this.customerService.create(1L, "first@email.com"))
+		Flux<Result> deleteEverything = this.customerService.all()
+				.flatMap(customer -> this.customerService.delete(customer.getId()));
+
+		Flux<Result> insert = this.customerService.create(1L, "first@email.com")
 				.thenMany(this.customerService.create(2L, "second@email.com"))
 				.thenMany(this.customerService.create(3L, "third@email.com"));
 
-		Flux<PostgresqlResult> deleteEverything = this.customerService.all()
-				.flatMap(customer -> this.customerService.delete(customer.getId()));
+		Flux<Customer> all = this.customerService.all();
 
-		StepVerifier.create(deleteEverything //
-				.thenMany(insert) //
-				.thenMany(this.customerService.all())//
-		).expectNextCount(3).verifyComplete();
+		Flux<Customer> allTogetherNow = deleteEverything.thenMany(insert).thenMany(all);
+
+		StepVerifier.create(allTogetherNow).expectNextCount(3).verifyComplete();
 	}
 
 }

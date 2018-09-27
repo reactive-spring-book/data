@@ -10,6 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/>
     </parent>
+
     <dependencies>
         <!-- reactive PostgreSQL client
         -->
@@ -29,11 +30,13 @@
         </dependency>
         <!-- embedded MongoDB instance
         -->
-        <dependency>
+       <!--
+       <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
