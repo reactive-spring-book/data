@@ -27,9 +27,13 @@ jdk:
 cache:
   directories:
   - $HOME/.m2/repository/
+  - downloads
+
 
 script:
 -  mvn -e verify deploy
 
 env:
 - SPRING_PROFILES_ACTIVE=ci
+- MONGO_VERSION=4.0.0
+
