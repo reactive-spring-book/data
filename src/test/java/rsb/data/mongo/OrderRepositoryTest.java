@@ -23,7 +23,8 @@ public class OrderRepositoryTest {
 
 		Order saved1 = new Order(UUID.randomUUID().toString(), "1");
 		Order saved2 = new Order(UUID.randomUUID().toString(), "2");
-		Flux<Order> saveAll = this.orderRepository.saveAll(Flux.just(saved1, saved2));
+		Flux<Order> saveAll = this.orderRepository.deleteAll()
+				.thenMany(this.orderRepository.saveAll(Flux.just(saved1, saved2)));
 
 		Predicate<Order> predicate = p -> p.getId().equalsIgnoreCase(saved1.getId())
 				|| p.getId().equalsIgnoreCase(saved2.getId());
