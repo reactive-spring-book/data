@@ -66,10 +66,10 @@ public class OrderServiceTest {
 	public void configureCollectionsBeforeTests() {
 		Mono<Boolean> collectionExists = this.reactiveMongoTemplate
 				.collectionExists(Order.class);
-		Mono<MongoCollection<Document>> createIfMissing = collectionExists.filter(x -> !x)
-				.flatMap(doesNotExist -> this.reactiveMongoTemplate
-						.createCollection(Order.class));
-		StepVerifier.create(createIfMissing).verifyComplete();
+		Mono<Boolean> createIfMissing = collectionExists.filter(x -> !x).flatMap(
+				doesNotExist -> this.reactiveMongoTemplate.createCollection(Order.class))
+				.thenReturn(true);
+		StepVerifier.create(createIfMissing).expectNextCount(1).verifyComplete();
 	}
 
 	@Test
