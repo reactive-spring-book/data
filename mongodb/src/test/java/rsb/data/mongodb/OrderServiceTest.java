@@ -64,21 +64,12 @@ public class OrderServiceTest {
 
 	@Before
 	public void configureCollectionsBeforeTests() {
-
 		Mono<Boolean> collectionExists = this.reactiveMongoTemplate
 				.collectionExists(Order.class);
 		Mono<MongoCollection<Document>> createIfMissing = collectionExists.filter(x -> !x)
 				.flatMap(doesNotExist -> this.reactiveMongoTemplate
 						.createCollection(Order.class));
-
 		StepVerifier.create(createIfMissing).verifyComplete();
-
-		/*
-		 * Flux<MongoCollection<Document>> setup = this.reactiveMongoTemplate
-		 * .dropCollection(Order.class)
-		 * .thenMany(this.reactiveMongoTemplate.createCollection(Order.class));
-		 * StepVerifier.create(setup).verifyComplete();
-		 */
 	}
 
 	@Test
