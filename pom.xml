@@ -20,11 +20,6 @@
     </modules>
     <dependencyManagement>
         <dependencies>
-
-            <!--<dependency>
-                <groupId>io.projectreactor.addons</groupId>
-                <artifactId>reactor-extra</artifactId><version>${reactor-bom.version}</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-jdbc</artifactId>
@@ -40,7 +35,6 @@
                 <artifactId>r2dbc-postgresql</artifactId>
                 <version>${r2dbc.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -68,7 +62,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -110,7 +103,6 @@
             </plugin>
         </plugins>
     </build>
-
     <repositories>
         <repository>
             <snapshots>
@@ -144,5 +136,4 @@
             </url>
         </pluginRepository>
     </pluginRepositories>
-
 </project>

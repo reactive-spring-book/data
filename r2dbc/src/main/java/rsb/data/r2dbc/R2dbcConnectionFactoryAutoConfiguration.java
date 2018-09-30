@@ -2,25 +2,28 @@ package rsb.data.r2dbc;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.spi.ConnectionFactory;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.net.URI;
 
 @Log4j2
-@SpringBootApplication
-public class R2dbcApplication {
-
-	public static void main(String args[]) {
-		SpringApplication.run(R2dbcApplication.class, args);
-	}
+@Configuration
+@ConditionalOnMissingBean(ConnectionFactory.class)
+public class R2dbcConnectionFactoryAutoConfiguration {
 
 	@Bean
-	PostgresqlConnectionFactory connectionFactory(
+	PostgresqlConnectionFactory r2dbcConnectionFactory(
 			@Value("${spring.datasource.url}") String url) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("building a R2DBC " + ConnectionFactory.class.getName()
+					+ " having URL '" + url + "'");
+		}
 
 		URI uri = URI.create(url);
 		String host = uri.getHost();
@@ -33,6 +36,7 @@ public class R2dbcApplication {
 		}
 
 		String name = uri.getPath().substring(1);
+
 		PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration
 				.builder() //
 				.database(name) //
@@ -40,6 +44,7 @@ public class R2dbcApplication {
 				.username(user) //
 				.password(pw) //
 				.build();
+
 		return new PostgresqlConnectionFactory(configuration);
 	}
 
