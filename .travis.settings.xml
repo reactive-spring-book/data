@@ -6,12 +6,12 @@
     <mirrors>
         <mirror>
             <mirrorOf>*</mirrorOf>
-            <name>remote-repos</name>
+            <name>cloudnativejava-artifactory</name>
             <url>https://cloudnativejava.jfrog.io/cloudnativejava/remote-repos</url>
-            <id>remote-repos</id>
+            <id>cloudnativejava-artifactory</id>
         </mirror>
     </mirrors>
-    <profiles>
+   <!-- <profiles>
         <profile>
             <repositories>
                 <repository>
@@ -50,5 +50,5 @@
     </profiles>
     <activeProfiles>
         <activeProfile>artifactory</activeProfile>
-    </activeProfiles>
+    </activeProfiles>-->
 </settings>

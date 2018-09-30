@@ -47,7 +47,6 @@ public class OrderServiceTest {
 	@BeforeClass
 	public static void warn() throws Exception {
 		File here = new File(".");
-		log.info("here: " + here.getAbsoluteFile().toString());
 		File mongodbSetupScript = new File(new File(here, ".."),
 				"ci/bin/setup-mongodb.sh");
 		Resource script = new FileSystemResource(mongodbSetupScript);
