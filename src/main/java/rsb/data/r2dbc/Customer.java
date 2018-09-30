@@ -1,4 +1,4 @@
-package rsb.data.postgresql;
+package rsb.data.r2dbc;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

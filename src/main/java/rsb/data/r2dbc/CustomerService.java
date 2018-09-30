@@ -1,4 +1,4 @@
-package rsb.data.postgresql;
+package rsb.data.r2dbc;
 
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;

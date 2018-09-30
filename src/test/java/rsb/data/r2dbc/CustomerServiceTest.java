@@ -1,4 +1,4 @@
-package rsb.data.postgresql;
+package rsb.data.r2dbc;
 
 import io.r2dbc.spi.Result;
 import org.junit.Test;
