@@ -1,4 +1,4 @@
-package rsb.data.mongo;
+package rsb.data.mongodb;
 
 import org.junit.Before;
 import org.junit.Test;

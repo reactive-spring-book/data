@@ -1,4 +1,4 @@
-package rsb.data.mongo;
+package rsb.data.mongodb;
 
 import com.mongodb.reactivestreams.client.MongoCollection;
 import lombok.extern.log4j.Log4j2;

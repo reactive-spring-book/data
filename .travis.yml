@@ -4,8 +4,8 @@ services:
 - postgresql
 
 before_install:
-- src/test/ci/bin/setup-mongodb.sh
-- src/test/ci/bin/setup-postgresql.sh
+- ci/bin/setup-mongodb.sh
+- ci/bin/setup-postgresql.sh
 
 #sudo: required
 

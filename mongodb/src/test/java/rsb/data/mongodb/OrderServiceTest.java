@@ -1,8 +1,8 @@
-package rsb.data.mongo;
+package rsb.data.mongodb;
 
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.reactivestreams.Publisher;
@@ -35,11 +35,13 @@ public class OrderServiceTest {
 	@Autowired
 	private OrderService orderService;
 
-	@Before
-	public void warn() throws Exception {
+	@BeforeClass
+	public static void warn() throws Exception {
 		File here = new File(".");
 		log.info("here: " + here.getAbsoluteFile().toString());
-		Resource script = new FileSystemResource("src/test/ci/bin/setup-mongodb.sh");
+		File mongodbSetupScript = new File(new File(here, ".."),
+				"ci/bin/setup-mongodb.sh");
+		Resource script = new FileSystemResource(mongodbSetupScript);
 		Assertions.assertThat(script.exists()).isTrue();
 		try (Reader r = new BufferedReader(
 				new InputStreamReader(script.getInputStream()))) {

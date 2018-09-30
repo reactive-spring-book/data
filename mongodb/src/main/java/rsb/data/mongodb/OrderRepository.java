@@ -1,4 +1,4 @@
-package rsb.data.mongo;
+package rsb.data.mongodb;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.mongodb.repository.Tailable;
