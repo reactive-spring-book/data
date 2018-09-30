@@ -1,0 +1,10 @@
+<settings>
+    <mirrors>
+        <mirror>
+            <id>internal-repository</id>
+            <name>Maven Repository Manager running on repo.mycompany.com</name>
+            <url>http://repo.mycompany.com/proxy</url>
+            <mirrorOf>*</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>
