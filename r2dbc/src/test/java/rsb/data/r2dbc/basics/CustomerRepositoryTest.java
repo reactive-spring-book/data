@@ -8,9 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-/**
- * Exercises the hand-rolled repository.
- */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest {
