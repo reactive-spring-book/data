@@ -21,7 +21,7 @@ class CustomerRepository {
 	Mono<Void> deleteById(Integer id) {
 		return Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
-						.createStatement("DELETE FROM customer  where id = $1")
+						.createStatement("DELETE FROM customer where id = $1")
 						.bind("$1", id) //
 						.execute())
 				.then();
@@ -38,7 +38,6 @@ class CustomerRepository {
 	}
 
 	Flux<Customer> findAll() {
-
 		return Mono.from(this.connectionFactory.create()).flatMapMany(connection -> Flux
 				.from(connection.createStatement("select * from customer ").execute())
 				.flatMap(result -> result.map((row, rowMetadata) -> new Customer(

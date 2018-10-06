@@ -20,10 +20,6 @@ public class R2dbcConnectionFactoryAutoConfiguration {
 	PostgresqlConnectionFactory r2dbcConnectionFactory(
 			@Value("${spring.datasource.url}") String url) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("building a R2DBC " + ConnectionFactory.class.getName()
-					+ " having URL '" + url + "'");
-		}
 
 		URI uri = URI.create(url);
 		String host = uri.getHost();
