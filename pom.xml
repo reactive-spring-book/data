@@ -20,21 +20,18 @@
     </modules>
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-jdbc</artifactId>
-                <version>${spring-data-jdbc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.r2dbc</groupId>
-                <artifactId>r2dbc-spi</artifactId>
-                <version>${r2dbc.version}</version>
+                <artifactId>spring-data-r2dbc</artifactId>
+                <version>1.0.0.M1</version>
             </dependency>
             <dependency>
                 <groupId>io.r2dbc</groupId>
                 <artifactId>r2dbc-postgresql</artifactId>
-                <version>${r2dbc.version}</version>
+                <version>1.0.0.M6</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

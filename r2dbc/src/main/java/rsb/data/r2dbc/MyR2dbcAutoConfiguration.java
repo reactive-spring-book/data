@@ -8,16 +8,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.r2dbc.function.DatabaseClient;
 
 import java.net.URI;
 
 @Log4j2
 @Configuration
 @ConditionalOnMissingBean(ConnectionFactory.class)
-public class R2dbcConnectionFactoryAutoConfiguration {
+public class MyR2dbcAutoConfiguration {
 
 	@Bean
-	PostgresqlConnectionFactory r2dbcConnectionFactory(
+	@ConditionalOnMissingBean
+	DatabaseClient databaseClient(ConnectionFactory cf) {
+		return DatabaseClient.create(cf);
+	}
+
+	@Bean
+	PostgresqlConnectionFactory connectionFactory(
 			@Value("${spring.datasource.url}") String url) {
 
 		URI uri = URI.create(url);

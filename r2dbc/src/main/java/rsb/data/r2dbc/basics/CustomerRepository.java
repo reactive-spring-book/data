@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import rsb.data.r2dbc.Customer;
 
 @Log4j2
 @Service
@@ -18,7 +19,7 @@ class CustomerRepository {
 		this.connectionFactory = pgc;
 	}
 
-	Mono<Void> deleteById(Integer id) {
+	public Mono<Void> deleteById(Integer id) {
 		return Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
 						.createStatement("DELETE FROM customer where id = $1")
@@ -27,17 +28,16 @@ class CustomerRepository {
 				.then();
 	}
 
-	Flux<Customer> save(Customer c) {
+	public Mono<Customer> save(Customer c) {
 		Flux<Result> mapMany = Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
 						.createStatement("INSERT INTO customer(email) VALUES($1)")
 						.bind("$1", c.getEmail()) //
 						.add().execute());
-		return mapMany
-				.switchMap(result -> Flux.just(new Customer(c.getId(), c.getEmail())));
+		return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
 	}
 
-	Flux<Customer> findAll() {
+	public Flux<Customer> findAll() {
 		return Mono.from(this.connectionFactory.create()).flatMapMany(connection -> Flux
 				.from(connection.createStatement("select * from customer ").execute())
 				.flatMap(result -> result.map((row, rowMetadata) -> new Customer(

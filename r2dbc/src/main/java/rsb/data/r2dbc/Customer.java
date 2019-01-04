@@ -1,4 +1,4 @@
-package rsb.data.r2dbc.springdata;
+package rsb.data.r2dbc;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,11 +8,15 @@ import org.springframework.data.annotation.Id;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class Customer {
+public class Customer {
 
 	@Id
 	private Integer id;
 
 	private String email;
+
+	Customer(String e) {
+		this.email = e;
+	}
 
 }

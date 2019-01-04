@@ -1,37 +1,43 @@
 package rsb.data.r2dbc.basics;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.r2dbc.function.DatabaseClient;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
+import reactor.core.publisher.Mono;
+import rsb.data.r2dbc.BaseRepositoryTest;
+import rsb.data.r2dbc.Customer;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class CustomerRepositoryTest {
+public class CustomerRepositoryTest extends BaseRepositoryTest {
 
 	@Autowired
 	private CustomerRepository repo;
 
-	@Test
-	public void all() {
+	@Autowired
+	private DatabaseClient databaseClient;
 
-		Flux<Void> deleteEverything = this.repo.findAll()
-				.flatMap(customer -> repo.deleteById(customer.getId()));
+	@Override
+	public DatabaseClient databaseClient() {
+		return this.databaseClient;
+	}
 
-		StepVerifier.create(deleteEverything).expectNextCount(0).verifyComplete();
+	@Override
+	public Flux<Customer> findAll() {
+		return this.repo.findAll();
+	}
 
-		Flux<Customer> insert = Flux.just(new Customer("first@email.com"),
-				new Customer("second@email.com"), new Customer("third@email.com"))
-				.flatMap(c -> this.repo.save(c));
+	@Override
+	public Mono<Void> deleteById(Integer id) {
+		return this.repo.deleteById(id);
+	}
 
-		StepVerifier.create(insert).expectNextCount(3).verifyComplete();
-
-		Flux<Customer> all = this.repo.findAll();
-
-		StepVerifier.create(all).expectNextCount(3).verifyComplete();
+	@Override
+	public Mono<Customer> save(Customer c) {
+		return this.repo.save(c);
 	}
 
 }
