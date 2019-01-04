@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import rsb.data.r2dbc.Customer;
+import rsb.data.r2dbc.SimpleCustomerRepository;
 
 @Log4j2
 @Service
-class CustomerRepository {
+class CustomerRepository implements SimpleCustomerRepository {
 
 	private final ConnectionFactory connectionFactory;
 
@@ -19,6 +20,7 @@ class CustomerRepository {
 		this.connectionFactory = pgc;
 	}
 
+	@Override
 	public Mono<Void> deleteById(Integer id) {
 		return Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
@@ -28,6 +30,7 @@ class CustomerRepository {
 				.then();
 	}
 
+	@Override
 	public Mono<Customer> save(Customer c) {
 		Flux<Result> mapMany = Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
@@ -37,6 +40,7 @@ class CustomerRepository {
 		return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
 	}
 
+	@Override
 	public Flux<Customer> findAll() {
 		return Mono.from(this.connectionFactory.create()).flatMapMany(connection -> Flux
 				.from(connection.createStatement("select * from customer ").execute())

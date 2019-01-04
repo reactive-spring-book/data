@@ -22,11 +22,7 @@ public abstract class BaseRepositoryTest {
 
 	public abstract DatabaseClient databaseClient();
 
-	public abstract Flux<Customer> findAll();
-
-	public abstract Mono<Void> deleteById(Integer id);
-
-	public abstract Mono<Customer> save(Customer c);
+	public abstract SimpleCustomerRepository repository();
 
 	@Value("classpath:/schema.sql")
 	private Resource resource;
@@ -41,25 +37,26 @@ public abstract class BaseRepositoryTest {
 		}
 	}
 
-	private Publisher<Void> begin() throws Exception {
+	private Publisher<Void> begin() {
 		return this.databaseClient().execute().sql(this.sql).then();
 	}
 
 	@Test
 	public void all() throws Exception {
 
-		Flux<Void> deleteEverything = Mono.from(this.begin())
-				.thenMany(findAll().flatMap(customer -> deleteById(customer.getId())));
+		SimpleCustomerRepository repo = repository();
+		Flux<Void> deleteEverything = Mono.from(this.begin()).thenMany(
+				repo.findAll().flatMap(customer -> repo.deleteById(customer.getId())));
 
 		StepVerifier.create(deleteEverything).expectNextCount(0).verifyComplete();
 
 		Flux<Customer> insert = Flux.just(new Customer(null, "first@email.com"),
 				new Customer(null, "second@email.com"),
-				new Customer(null, "third@email.com")).flatMap(this::save);
+				new Customer(null, "third@email.com")).flatMap(repo::save);
 
 		StepVerifier.create(insert).expectNextCount(3).verifyComplete();
 
-		Flux<Customer> all = findAll();
+		Flux<Customer> all = repo.findAll();
 
 		StepVerifier.create(all).expectNextCount(3).verifyComplete();
 	}
