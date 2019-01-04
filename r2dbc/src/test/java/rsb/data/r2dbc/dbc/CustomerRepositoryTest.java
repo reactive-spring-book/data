@@ -1,4 +1,4 @@
-package rsb.data.r2dbc.basics;
+package rsb.data.r2dbc.dbc;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +10,18 @@ import reactor.core.publisher.Mono;
 import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.Customer;
 
+/**
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {
 
 	@Autowired
-	private CustomerRepository repo;
-
-	@Autowired
 	private DatabaseClient databaseClient;
 
-	@Override
-	public void all() throws Exception {
-		super.all();
-	}
+	@Autowired
+	private CustomerRepository customerRepository;
 
 	@Override
 	public DatabaseClient databaseClient() {
@@ -32,17 +30,22 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 
 	@Override
 	public Flux<Customer> findAll() {
-		return this.repo.findAll();
+		return customerRepository.findAll();
 	}
 
 	@Override
 	public Mono<Void> deleteById(Integer id) {
-		return this.repo.deleteById(id);
+		return customerRepository.deleteById(id);
+	}
+
+	@Override
+	public void all() throws Exception {
+		super.all();
 	}
 
 	@Override
 	public Mono<Customer> save(Customer c) {
-		return this.repo.save(c);
+		return customerRepository.save(c);
 	}
 
 }

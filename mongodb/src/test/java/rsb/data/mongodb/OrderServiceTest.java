@@ -71,9 +71,10 @@ public class OrderServiceTest {
 	@Test
 	public void createOrders() {
 
-		Publisher<Order> orders = this.orderRepository.deleteAll()
-				.thenMany(this.orderService.createOrders("1", "2", "3"))
-				.thenMany(this.orderRepository.findAll());
+		Publisher<Order> orders = // this.reactiveMongoTemplate.dropCollection(Order.class)
+				(this.orderRepository.deleteAll()
+						.thenMany(this.orderService.createOrders("1", "2", "3"))
+						.thenMany(this.orderRepository.findAll()));
 
 		StepVerifier.create(orders).expectNextCount(3).verifyComplete();
 	}
