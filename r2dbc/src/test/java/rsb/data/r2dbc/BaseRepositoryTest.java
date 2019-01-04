@@ -1,5 +1,6 @@
 package rsb.data.r2dbc;
 
+import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.io.Reader;
 /**
  * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
  */
+@Log4j2
 public abstract class BaseRepositoryTest {
 
 	public abstract DatabaseClient databaseClient();
@@ -43,6 +45,7 @@ public abstract class BaseRepositoryTest {
 
 	@Test
 	public void all() throws Exception {
+		log.info("launching all() for " + getClass().getName());
 
 		SimpleCustomerRepository repo = repository();
 		Flux<Void> deleteEverything = Mono.from(this.begin()).thenMany(

@@ -31,4 +31,9 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 		return this.customerRepository;
 	}
 
+	@Override
+	public void all() throws Exception {
+		super.all();
+	}
+
 }

@@ -24,6 +24,11 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	}
 
 	@Override
+	public void all() throws Exception {
+		super.all();
+	}
+
+	@Override
 	public SimpleCustomerRepository repository() {
 		return repo;
 	}
