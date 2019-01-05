@@ -78,7 +78,7 @@ public class OrderServiceTest {
 		StepVerifier.create(orders).expectNextCount(3).verifyComplete();
 	}
 
-	// @Test
+	@Test
 	public void createOrdersAndFail() {
 
 		Publisher<Order> orders = this.orderRepository.deleteAll()
