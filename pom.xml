@@ -15,6 +15,7 @@
         <relativePath/>
     </parent>
     <modules>
+        <module>refactor</module>
         <module>r2dbc</module>
         <module>mongodb</module>
     </modules>
