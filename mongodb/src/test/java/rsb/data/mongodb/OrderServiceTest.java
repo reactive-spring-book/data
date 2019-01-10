@@ -81,8 +81,7 @@ public class OrderServiceTest {
 	@Test
 	public void createOrdersAndFail() {
 
-		Publisher<Order> orders = this.orderRepository
-			.deleteAll()
+		Publisher<Order> orders = this.orderRepository.deleteAll()
 				.thenMany(this.orderService.createOrders("1", "2",
 						OrderService.BOOM_EXCEPTION))
 				.thenMany(this.orderRepository.findAll());

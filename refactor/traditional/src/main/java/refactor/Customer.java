@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer {
-		private String id;
-		private String email;
-}
 
+	private String id;
+
+	private String email;
+
+}
