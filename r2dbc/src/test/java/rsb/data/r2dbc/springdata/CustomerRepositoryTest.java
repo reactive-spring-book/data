@@ -11,6 +11,7 @@ import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.Customer;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
+// <1>
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {
@@ -31,11 +32,7 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 		return this.repository;
 	}
 
-	@Override
-	public void all() throws Exception {
-		super.all();
-	}
-
+	// <2>
 	private final SimpleCustomerRepository repository = new SimpleCustomerRepository() {
 
 		@Override

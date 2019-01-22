@@ -14,20 +14,21 @@ import rsb.data.r2dbc.SimpleCustomerRepository;
 
 import java.util.function.BiFunction;
 
+// <1>
 @Log4j2
 @Service
 class CustomerRepository implements SimpleCustomerRepository {
 
 	private final ConnectionFactory connectionFactory;
 
-	// <1>
+	// <2>
 	CustomerRepository(PostgresqlConnectionFactory pgc) {
 		this.connectionFactory = pgc;
 	}
 
 	@Override
 	public Mono<Void> deleteById(Integer id) {
-		// <2>
+		// <3>
 		return Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
 						.createStatement("DELETE FROM customer where id = $1")
@@ -38,16 +39,13 @@ class CustomerRepository implements SimpleCustomerRepository {
 
 	@Override
 	public Flux<Customer> findAll() {
-		// <3>
-		return Mono
-				.from(this.connectionFactory
-						.create())
-				.flatMapMany(connection -> Flux
-						.from(connection.createStatement("select * from customer ")
-								.execute()) // <3>
+		// <4>
+		return Mono.from(this.connectionFactory.create())
+				.flatMapMany(connection -> Flux.from(
+						connection.createStatement("select * from customer ").execute())
 						.flatMap(result -> {
 
-							BiFunction<Row, RowMetadata, Customer> mapper = // <4>
+							BiFunction<Row, RowMetadata, Customer> mapper = // <3>
 									(row, rowMetadata) -> new Customer(
 											row.get("id", Integer.class),
 											row.get("email", String.class));
@@ -59,13 +57,16 @@ class CustomerRepository implements SimpleCustomerRepository {
 
 	@Override
 	public Mono<Customer> save(Customer c) {
-		// <4>
+
+		// TODO https://github.com/r2dbc/r2dbc-mssql/issues/17
+		// Statement.returnGeneratedKeys is available in R2DBC M7
+
 		Flux<Result> mapMany = Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
 						.createStatement("INSERT INTO customer(email) VALUES($1)")
 						.bind("$1", c.getEmail()) //
-						.add() //
 						.execute());
+
 		return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
 	}
 
