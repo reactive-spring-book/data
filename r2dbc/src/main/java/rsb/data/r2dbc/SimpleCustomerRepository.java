@@ -5,9 +5,9 @@ import reactor.core.publisher.Mono;
 
 public interface SimpleCustomerRepository {
 
-	Mono<Void> deleteById(Integer id);
-
 	Mono<Customer> save(Customer c);
+
+	Mono<Void> deleteById(Integer id);
 
 	Flux<Customer> findAll();
 

@@ -14,18 +14,14 @@ import java.net.URI;
 
 @Log4j2
 @Configuration
-@ConditionalOnMissingBean(ConnectionFactory.class)
 public class MyR2dbcAutoConfiguration {
 
+	// <1>
 	@Bean
-	@ConditionalOnMissingBean
-	DatabaseClient databaseClient(ConnectionFactory cf) {
-		return DatabaseClient.create(cf);
-	}
-
-	@Bean
+	@ConditionalOnMissingBean(ConnectionFactory.class)
 	PostgresqlConnectionFactory connectionFactory(
 			@Value("${spring.datasource.url}") String url) {
+		// <2>
 
 		URI uri = URI.create(url);
 		String host = uri.getHost();
@@ -39,6 +35,7 @@ public class MyR2dbcAutoConfiguration {
 
 		String name = uri.getPath().substring(1);
 
+		// <3>
 		PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration
 				.builder() //
 				.database(name) //
@@ -48,6 +45,13 @@ public class MyR2dbcAutoConfiguration {
 				.build();
 
 		return new PostgresqlConnectionFactory(configuration);
+	}
+
+	// <3>
+	@Bean
+	@ConditionalOnMissingBean
+	DatabaseClient databaseClient(ConnectionFactory cf) {
+		return DatabaseClient.create(cf);
 	}
 
 }

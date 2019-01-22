@@ -31,16 +31,16 @@ public class TailableCustomerQueryTest {
 	private CustomerRepository repository;
 
 	@Before
-	public void setUp() {
+	public void before() {
 
 		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024)
-				.maxDocuments(100).capped();
+			.maxDocuments(100).capped();
 
 		Mono<MongoCollection<Document>> recreateCollection = operations
-				.collectionExists(Order.class)
-				.flatMap(exists -> exists ? operations.dropCollection(Customer.class)
-						: Mono.just(exists))
-				.then(operations.createCollection(Customer.class, capped));
+			.collectionExists(Order.class)
+			.flatMap(exists -> exists ? operations.dropCollection(Customer.class)
+				: Mono.just(exists))
+			.then(operations.createCollection(Customer.class, capped));
 		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 
@@ -50,10 +50,10 @@ public class TailableCustomerQueryTest {
 		Mono<Customer> then = this.writeAndWait().then(this.writeAndWait());
 		StepVerifier.create(then).expectNextCount(1).verifyComplete();
 		this.repository.findByName("1") //
-				.doOnNext(people::add) //
-				.doOnComplete(() -> log.info("complete")) //
-				.doOnTerminate(() -> log.info("terminated")) //
-				.subscribe();
+			.doOnNext(people::add) //
+			.doOnComplete(() -> log.info("complete")) //
+			.doOnTerminate(() -> log.info("terminated")) //
+			.subscribe();
 		Mono<Customer> thenAgain = this.writeAndWait().then(this.writeAndWait());
 		StepVerifier.create(thenAgain).expectNextCount(1).verifyComplete();
 		Assertions.assertThat(people).hasSize(4);

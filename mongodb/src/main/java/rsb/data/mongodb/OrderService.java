@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 @Service
-public class OrderService {
+class OrderService {
 
 	public final static String BOOM_EXCEPTION = "boom";
 
