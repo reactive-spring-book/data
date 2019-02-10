@@ -41,6 +41,7 @@ public class TailableCustomerQueryTest {
 				.flatMap(exists -> exists ? operations.dropCollection(Customer.class)
 						: Mono.just(exists))
 				.then(operations.createCollection(Customer.class, capped));
+
 		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 

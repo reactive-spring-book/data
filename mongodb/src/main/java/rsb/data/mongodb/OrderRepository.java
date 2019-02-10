@@ -1,9 +1,10 @@
 package rsb.data.mongodb;
 
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.mongodb.repository.Tailable;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
-interface OrderRepository extends ReactiveMongoRepository<Order, String> {
+interface OrderRepository extends ReactiveCrudRepository<Order, String> {
+
+	Flux<Order> findByProductId(String productId);
 
 }

@@ -14,81 +14,84 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.charset.Charset;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @RunWith(SpringRunner.class)
-@DataMongoTest
+@DataMongoTest // <1>
 @Log4j2
 @Import(OrderService.class)
 public class OrderServiceTest {
 
 	@Autowired
-	private OrderRepository orderRepository;
+	private OrderRepository repository;
 
 	@Autowired
-	private OrderService orderService;
+	private OrderService service;
 
 	@Autowired
-	private ReactiveMongoTemplate reactiveMongoTemplate;
+	private ReactiveMongoTemplate template;
 
+	// <2>
 	@BeforeClass
 	public static void warn() throws Exception {
-		File here = new File(".");
-		File mongodbSetupScript = new File(new File(here, ".."),
-				"ci/bin/setup-mongodb.sh");
-		Resource script = new FileSystemResource(mongodbSetupScript);
+		Resource script = new FileSystemResource(
+				new File("..", "ci/bin/setup-mongodb.sh"));
 		Assertions.assertThat(script.exists()).isTrue();
-		try (Reader r = new BufferedReader(
-				new InputStreamReader(script.getInputStream()))) {
-			String contents = FileCopyUtils.copyToString(r);
-			log.warn("in order to run this test you need to be talking to"
-					+ " a MongoDB instance that supports replicas! "
-					+ "To test, I usually use a script like this to start up my instance:\n\n"
-					+ contents);
-		}
+		Charset charset = Charset.defaultCharset();
+		String instructions = StreamUtils.copyToString(script.getInputStream(), charset);
+		log.warn("Be sure MongoDB supports replicas. Try:\n\n" + instructions);
 	}
 
+	// <3>
 	@Before
 	public void configureCollectionsBeforeTests() {
-		Mono<Boolean> collectionExists = this.reactiveMongoTemplate
-				.collectionExists(Order.class);
-		Mono<Boolean> createIfMissing = collectionExists.filter(x -> !x).flatMap(
-				doesNotExist -> this.reactiveMongoTemplate.createCollection(Order.class))
+		Mono<Boolean> createIfMissing = template.collectionExists(Order.class) //
+				.filter(x -> !x) //
+				.flatMap(exists -> template.createCollection(Order.class)) //
 				.thenReturn(true);
-		StepVerifier.create(createIfMissing).expectNextCount(1).verifyComplete();
+		StepVerifier //
+				.create(createIfMissing) //
+				.expectNextCount(1) //
+				.verifyComplete();
 	}
 
+	// <4>
 	@Test
 	public void createOrders() {
 
-		Publisher<Order> orders = this.orderRepository.deleteAll()
-				.thenMany(this.orderService.createOrders("1", "2", "3"))
-				.thenMany(this.orderRepository.findAll());
+		Publisher<Order> orders = this.repository //
+				.deleteAll() //
+				.thenMany(this.service.createOrders("1", "2", "3")) //
+				.thenMany(this.repository.findAll());
 
-		StepVerifier.create(orders).expectNextCount(3).verifyComplete();
+		StepVerifier //
+				.create(orders) //
+				.expectNextCount(3) //
+				.verifyComplete();
 	}
 
+	// <5>
 	@Test
-	public void createOrdersAndFail() {
+	public void createOrdersAndRollback() {
 
-		Publisher<Order> orders = this.orderRepository.deleteAll()
-				.thenMany(this.orderService.createOrders("1", "2",
-						OrderService.BOOM_EXCEPTION))
-				.thenMany(this.orderRepository.findAll());
+		Publisher<Order> orders = this.repository //
+				.deleteAll() //
+				.thenMany(this.service.createOrders("1", "2", null)) //
+				.thenMany(this.repository.findAll());
 
-		StepVerifier.create(orders).expectNextCount(0).verifyError();
+		StepVerifier //
+				.create(orders) //
+				.expectNextCount(0) //
+				.verifyError();
 
-		StepVerifier.create(this.orderRepository.findAll()).expectNextCount(0)
+		StepVerifier //
+				.create(this.repository.findAll()) //
+				.expectNextCount(0) //
 				.verifyComplete();
 	}
 

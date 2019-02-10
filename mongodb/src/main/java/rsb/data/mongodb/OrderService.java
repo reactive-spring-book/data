@@ -2,12 +2,11 @@ package rsb.data.mongodb;
 
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 
 @Service
 class OrderService {
-
-	public final static String BOOM_EXCEPTION = "boom";
 
 	private final ReactiveMongoTemplate template;
 
@@ -16,13 +15,12 @@ class OrderService {
 	}
 
 	public Flux<Order> createOrders(String... productIds) {
-		return this.template.inTransaction().execute(txTemplate -> Flux.just(productIds)
-				.map(x -> new Order(null, x)).flatMap(order -> {
-					if (order.getProductId().equalsIgnoreCase(BOOM_EXCEPTION)) {
-						throw new IllegalArgumentException(BOOM_EXCEPTION);
-					}
-					return txTemplate.insert(order);
-				}));
+		return this.template.inTransaction() // <1>
+				.execute(txTemplate -> Flux.just(productIds).map(pid -> {
+					Assert.notNull(pid, "the processId can't be null"); // <2>
+					return pid;
+				}).map(x -> new Order(null, x)).flatMap(txTemplate::insert) // <3>
+		);
 	}
 
 }

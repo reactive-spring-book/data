@@ -5,11 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -20,35 +21,48 @@ public class OrderRepositoryTest {
 	@Autowired
 	private OrderRepository orderRepository;
 
-	@Autowired
-	private ReactiveMongoTemplate reactiveMongoTemplate;
+	private final Collection<Order> orders = Arrays.asList(
+			new Order(UUID.randomUUID().toString(), "1"),
+			new Order(UUID.randomUUID().toString(), "2"),
+			new Order(UUID.randomUUID().toString(), "2"));
+
+	private final Predicate<Order> predicate = order -> this.orders //
+			.stream() //
+			.filter(candidateOrder -> candidateOrder.getId()
+					.equalsIgnoreCase(order.getId())) //
+			.filter(candidateOrder -> candidateOrder.getProductId()
+					.equalsIgnoreCase(order.getProductId()))
+			.count() != 0;
 
 	@Before
-	public void before() throws Exception {
-		StepVerifier.create(this.reactiveMongoTemplate.dropCollection(Order.class))
+	public void before() {
+
+		Flux<Order> saveAll = this.orderRepository.deleteAll()
+				.thenMany(this.orderRepository.saveAll(this.orders));
+
+		StepVerifier // <1>
+				.create(saveAll) //
+				.expectNextMatches(this.predicate) //
+				.expectNextMatches(this.predicate) //
+				.expectNextMatches(this.predicate) //
 				.verifyComplete();
 	}
 
 	@Test
-	public void writeAndRead() {
-
-		Order saved1 = new Order(UUID.randomUUID().toString(), "1");
-		Order saved2 = new Order(UUID.randomUUID().toString(), "2");
-		Flux<Order> saveAll = this.orderRepository.deleteAll()
-				.thenMany(this.orderRepository.saveAll(Flux.just(saved1, saved2)));
-
-		Predicate<Order> predicate = p -> p.getId().equalsIgnoreCase(saved1.getId())
-				|| p.getId().equalsIgnoreCase(saved2.getId());
-
-		StepVerifier //
-				.create(saveAll) //
-				.expectNextMatches(predicate) //
-				.expectNextMatches(predicate) //
+	public void findAll() {
+		StepVerifier // <2>
+				.create(this.orderRepository.findAll()) //
+				.expectNextMatches(this.predicate) //
+				.expectNextMatches(this.predicate) //
+				.expectNextMatches(this.predicate) //
 				.verifyComplete();
+	}
 
-		StepVerifier.create(this.orderRepository.findAll()) //
-				.expectNextMatches(predicate) //
-				.expectNextMatches(predicate) //
+	@Test
+	public void findByProductId() {
+		StepVerifier // <3>
+				.create(this.orderRepository.findByProductId("2")) //
+				.expectNextCount(2) //
 				.verifyComplete();
 	}
 
