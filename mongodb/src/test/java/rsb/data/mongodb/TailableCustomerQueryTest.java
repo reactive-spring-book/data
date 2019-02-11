@@ -33,6 +33,7 @@ public class TailableCustomerQueryTest {
 	@Before
 	public void before() {
 
+		// <1>
 		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024)
 				.maxDocuments(100).capped();
 
@@ -46,21 +47,36 @@ public class TailableCustomerQueryTest {
 	}
 
 	@Test
-	public void tail() {
+	public void tail() throws InterruptedException {
+		// <2>
 		Queue<Customer> people = new ConcurrentLinkedQueue<>();
-		Mono<Customer> then = this.writeAndWait().then(this.writeAndWait());
-		StepVerifier.create(then).expectNextCount(1).verifyComplete();
+
+		// <3>
+		StepVerifier //
+				.create(this.write().then(this.write())) //
+				.expectNextCount(1) //
+				.verifyComplete();
+
+		// <4>
 		this.repository.findByName("1") //
 				.doOnNext(people::add) //
 				.doOnComplete(() -> log.info("complete")) //
 				.doOnTerminate(() -> log.info("terminated")) //
 				.subscribe();
-		Mono<Customer> thenAgain = this.writeAndWait().then(this.writeAndWait());
-		StepVerifier.create(thenAgain).expectNextCount(1).verifyComplete();
+
+		Assertions.assertThat(people).hasSize(2);
+
+		// <5>
+		StepVerifier.create(this.write().then(this.write())) //
+				.expectNextCount(1) //
+				.verifyComplete(); //
+
+		// <6>
+		Thread.sleep(1000);
 		Assertions.assertThat(people).hasSize(4);
 	}
 
-	private Mono<Customer> writeAndWait() {
+	private Mono<Customer> write() {
 		return repository.save(new Customer(UUID.randomUUID().toString(), "1"));
 	}
 
