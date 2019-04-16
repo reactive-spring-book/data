@@ -63,12 +63,12 @@ public abstract class BaseRepositoryTest {
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //
 				new Customer(null, "third@email.com")) //
-				.flatMap(repo::save);
+				.flatMap(repo::save); //<10>
 
-		StepVerifier // <10>
+		StepVerifier // 
 				.create(insert) //
 				.expectNextCount(3) //
-				.verifyComplete();
+				.verifyComplete(); // <11>
 
 		Flux<Customer> all = repo.findAll();
 
