@@ -47,7 +47,7 @@ public class MyR2dbcAutoConfiguration {
 		return new PostgresqlConnectionFactory(configuration);
 	}
 
-	// <3>
+	// <4>
 	@Bean
 	@ConditionalOnMissingBean
 	DatabaseClient databaseClient(ConnectionFactory cf) {
