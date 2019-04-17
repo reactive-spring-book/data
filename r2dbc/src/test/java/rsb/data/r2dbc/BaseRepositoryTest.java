@@ -63,9 +63,9 @@ public abstract class BaseRepositoryTest {
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //
 				new Customer(null, "third@email.com")) //
-				.flatMap(repo::save); //<10>
+				.flatMap(repo::save); // <10>
 
-		StepVerifier // 
+		StepVerifier //
 				.create(insert) //
 				.expectNextCount(3) //
 				.verifyComplete(); // <11>
