@@ -5,8 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <r2dbc.version>1.0.0.M6</r2dbc.version>
-        <spring-data-r2dbc.version>1.0.0.M1
-        </spring-data-r2dbc.version>
+        <spring-data-r2dbc.version>1.0.0.M1</spring-data-r2dbc.version>
     </properties> 
     <packaging>pom</packaging>
     <artifactId>data</artifactId>
@@ -27,16 +26,12 @@
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-r2dbc</artifactId>
-                <version>
-		  ${spring-data-r2dbc.version}
-		</version>
+                <version> ${spring-data-r2dbc.version} </version>
             </dependency>
             <dependency>
                 <groupId>io.r2dbc</groupId>
                 <artifactId>r2dbc-postgresql</artifactId>
-                <version>
-		  ${r2dbc.version}
-		</version>
+                <version> ${r2dbc.version} </version>
             </dependency>
 
         </dependencies>
