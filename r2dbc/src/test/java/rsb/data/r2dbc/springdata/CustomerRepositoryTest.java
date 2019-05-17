@@ -3,16 +3,15 @@ package rsb.data.r2dbc.springdata;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.test.context.junit4.SpringRunner;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import rsb.data.r2dbc.BaseRepositoryTest;
-import rsb.data.r2dbc.Customer;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
 // <1>
 @SpringBootTest
+@Import(R2dbcSpringDataApplication.class)
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {
 
@@ -22,6 +21,9 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	@Autowired
 	private DatabaseClient databaseClient;
 
+	@Autowired
+	private SimpleCustomerRepository customerRepository;
+
 	@Override
 	public DatabaseClient databaseClient() {
 		return databaseClient;
@@ -29,26 +31,7 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 
 	@Override
 	public SimpleCustomerRepository repository() {
-		return this.repository;
+		return this.customerRepository;
 	}
-
-	// <2>
-	private final SimpleCustomerRepository repository = new SimpleCustomerRepository() {
-
-		@Override
-		public Mono<Void> deleteById(Integer id) {
-			return repo.deleteById(id);
-		}
-
-		@Override
-		public Mono<Customer> save(Customer c) {
-			return repo.save(c);
-		}
-
-		@Override
-		public Flux<Customer> findAll() {
-			return repo.findAll();
-		}
-	};
 
 }

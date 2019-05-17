@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.ReactiveMongoTransactionManager;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
 import java.io.IOException;
 
@@ -16,6 +17,11 @@ public class MongoDbApplication {
 
 	public static void main(String args[]) throws IOException {
 		SpringApplication.run(MongoDbApplication.class, args);
+	}
+
+	@Bean
+	TransactionalOperator transactionalOperator(ReactiveTransactionManager txm) {
+		return TransactionalOperator.create(txm);
 	}
 
 	@Bean

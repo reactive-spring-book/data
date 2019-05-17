@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager;
 import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
 import java.net.URI;
 
@@ -52,6 +54,24 @@ public class MyR2dbcAutoConfiguration {
 	@ConditionalOnMissingBean
 	DatabaseClient databaseClient(ConnectionFactory cf) {
 		return DatabaseClient.create(cf);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	TransactionalOperator transactionalOperator(R2dbcTransactionManager txm) {
+		return TransactionalOperator.create(txm);
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	R2dbcTransactionManager transactionManager(ConnectionFactory connectionFactory) {
+		return new R2dbcTransactionManager(connectionFactory);
+	}
+
+	@Bean
+	CustomerService customerService(SimpleCustomerRepository cr,
+			TransactionalOperator to) {
+		return new CustomerService(cr, to);
 	}
 
 }

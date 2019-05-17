@@ -1,5 +1,6 @@
 package rsb.data.r2dbc.dbc;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -8,13 +9,10 @@ import rsb.data.r2dbc.Customer;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
 @Component
+@RequiredArgsConstructor
 public class CustomerRepository implements SimpleCustomerRepository {
 
 	private final DatabaseClient databaseClient;
-
-	public CustomerRepository(DatabaseClient databaseClient) {
-		this.databaseClient = databaseClient;
-	}
 
 	// <1>
 	@Override

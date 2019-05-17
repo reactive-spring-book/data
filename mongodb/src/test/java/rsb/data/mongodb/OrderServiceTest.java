@@ -67,7 +67,7 @@ public class OrderServiceTest {
 
 		Publisher<Order> orders = this.repository //
 				.deleteAll() //
-				.thenMany(this.service.createOrdersInTransaction("1", "2", "3")) //
+				.thenMany(this.service.createOrdersExecute("1", "2", "3")) //
 				.thenMany(this.repository.findAll());
 
 		StepVerifier //
@@ -78,16 +78,23 @@ public class OrderServiceTest {
 
 	// <5>
 	@Test
-	public void createOrdersInTransactionAndRollback() {
-		doTest(this.service.createOrdersInTransaction("1", "2", null));
+	public void executeRollback() {
+		this.runTransactionalTest(this.service.createOrdersExecute("1", "2", null));
+	}
+
+	// <5>
+	@Test
+	public void transactionalOperatorRollback() {
+		this.runTransactionalTest(
+				this.service.createOrdersTransactionalOperator("1", "2", null));
 	}
 
 	@Test
-	public void createOrdersTransactionalAndRollback() {
-		doTest(this.service.createOrdersTransactional("1", "2", null));
+	public void transactionalRollback() {
+		this.runTransactionalTest(this.service.createOrdersTransactional("1", "2", null));
 	}
 
-	private void doTest(Flux<Order> ordersInTx) {
+	private void runTransactionalTest(Flux<Order> ordersInTx) {
 		Publisher<Order> orders = this.repository //
 				.deleteAll() //
 				.thenMany(ordersInTx) //
