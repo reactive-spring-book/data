@@ -65,9 +65,14 @@ class CustomerRepository implements SimpleCustomerRepository {
 				.flatMapMany(connection -> connection
 						.createStatement("INSERT INTO customer(email) VALUES($1)")
 						.bind("$1", c.getEmail()) //
-						.execute());
+						.returnGeneratedValues("id").execute());
 
-		return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
+		Flux<Customer> results = mapMany.flatMap(r -> r.map((row, rowMetadata) -> {
+			var id = Integer.class.cast(row.get("id"));
+			return new Customer(id, c.getEmail());
+		}));
+		return results.single();
+		// return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
 	}
 
 }

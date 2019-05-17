@@ -30,7 +30,8 @@ public class CustomerRepository implements SimpleCustomerRepository {
 				.into(Customer.class) //
 				.table("customer") //
 				.using(c) //
-				.map((row, rowMetadata) -> c) //
+				.map((row, rowMetadata) -> new Customer(Integer.class.cast(row.get("id")),
+						c.getEmail()))//
 				.first();
 	}
 

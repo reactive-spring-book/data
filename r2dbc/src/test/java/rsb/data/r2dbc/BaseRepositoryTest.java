@@ -22,10 +22,10 @@ import java.io.Reader;
 public abstract class BaseRepositoryTest {
 
 	// <1>
-	public abstract DatabaseClient databaseClient();
+	public abstract DatabaseClient getDatabaseClient();
 
 	// <2>
-	public abstract SimpleCustomerRepository repository();
+	public abstract SimpleCustomerRepository getRepository();
 
 	// <3>
 	@Value("classpath:/schema.sql")
@@ -46,9 +46,9 @@ public abstract class BaseRepositoryTest {
 	@Test
 	public void all() throws Exception {
 
-		SimpleCustomerRepository repo = repository();
+		SimpleCustomerRepository repo = getRepository();
 
-		Mono<Void> createSchema = this.databaseClient().execute().sql(this.sql).then(); // <6>
+		Mono<Void> createSchema = this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
 
 		Flux<Void> findAndDelete = repo.findAll()
 				.flatMap(customer -> repo.deleteById(customer.getId())); // <7>
@@ -67,7 +67,9 @@ public abstract class BaseRepositoryTest {
 
 		StepVerifier //
 				.create(insert) //
-				.expectNextCount(3) //
+				.expectNextCount(2) //
+				.expectNextMatches(customer -> customer.getId() != null
+						&& customer.getId() > 0 && customer.getEmail() != null)
 				.verifyComplete(); // <11>
 
 		Flux<Customer> all = repo.findAll();

@@ -19,12 +19,12 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	private DatabaseClient databaseClient;
 
 	@Override
-	public DatabaseClient databaseClient() {
+	public DatabaseClient getDatabaseClient() {
 		return databaseClient;
 	}
 
 	@Override
-	public SimpleCustomerRepository repository() {
+	public SimpleCustomerRepository getRepository() {
 		return repo;
 	}
 

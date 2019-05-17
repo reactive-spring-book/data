@@ -22,18 +22,13 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	private CustomerRepository customerRepository;
 
 	@Override
-	public DatabaseClient databaseClient() {
+	public DatabaseClient getDatabaseClient() {
 		return databaseClient;
 	}
 
 	@Override
-	public SimpleCustomerRepository repository() {
+	public SimpleCustomerRepository getRepository() {
 		return this.customerRepository;
-	}
-
-	@Override
-	public void all() throws Exception {
-		super.all();
 	}
 
 }
