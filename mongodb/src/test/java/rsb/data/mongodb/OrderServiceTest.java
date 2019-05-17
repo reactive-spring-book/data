@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -66,7 +67,7 @@ public class OrderServiceTest {
 
 		Publisher<Order> orders = this.repository //
 				.deleteAll() //
-				.thenMany(this.service.createOrders("1", "2", "3")) //
+				.thenMany(this.service.createOrdersInTransaction("1", "2", "3")) //
 				.thenMany(this.repository.findAll());
 
 		StepVerifier //
@@ -77,11 +78,19 @@ public class OrderServiceTest {
 
 	// <5>
 	@Test
-	public void createOrdersAndRollback() {
+	public void createOrdersInTransactionAndRollback() {
+		doTest(this.service.createOrdersInTransaction("1", "2", null));
+	}
 
+	@Test
+	public void createOrdersTransactionalAndRollback() {
+		doTest(this.service.createOrdersTransactional("1", "2", null));
+	}
+
+	private void doTest(Flux<Order> ordersInTx) {
 		Publisher<Order> orders = this.repository //
 				.deleteAll() //
-				.thenMany(this.service.createOrders("1", "2", null)) //
+				.thenMany(ordersInTx) //
 				.thenMany(this.repository.findAll());
 
 		StepVerifier //
