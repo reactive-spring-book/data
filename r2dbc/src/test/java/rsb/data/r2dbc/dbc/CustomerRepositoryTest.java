@@ -3,7 +3,7 @@ package rsb.data.r2dbc.dbc;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.r2dbc.function.DatabaseClient;
+import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.test.context.junit4.SpringRunner;
 import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
