@@ -37,55 +37,55 @@ public class CustomerServiceTest {
 	public void reset() {
 
 		this.transactionalOperator = TransactionalOperator
-			.create(this.transactionManager);
+				.create(this.transactionManager);
 
 		StepVerifier
-			.create(this.customerRepository.findAll()
-				.flatMap(cus -> this.customerRepository.deleteById(cus.getId()))
-				.thenMany(this.customerRepository.findAll()))
-			.expectNextCount(0).verifyComplete();
+				.create(this.customerRepository.findAll()
+						.flatMap(cus -> this.customerRepository.deleteById(cus.getId()))
+						.thenMany(this.customerRepository.findAll()))
+				.expectNextCount(0).verifyComplete();
 	}
 
 	@Test
 	public void transactional() {
 
 		var data = this.customerService
-			.execute(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
-				.flatMap(c -> customerRepository.save(c))
-				.thenMany(Flux.error(new IllegalArgumentException())));
+				.execute(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
+						.flatMap(c -> customerRepository.save(c))
+						.thenMany(Flux.error(new IllegalArgumentException())));
 
 		StepVerifier.create(data).expectError().verify();
 
 		StepVerifier.create(customerRepository.findAll()).expectNextCount(0)
-			.verifyComplete();
+				.verifyComplete();
 	}
 
 	@Test
 	public void execute() {
 
 		var data = transactionalOperator.execute(
-			status -> Flux.just(new Customer(null, "1"), new Customer(null, "2"))
-				.flatMap(c -> customerRepository.save(c))
-				.thenMany(Flux.error(new IllegalArgumentException())));
+				status -> Flux.just(new Customer(null, "1"), new Customer(null, "2"))
+						.flatMap(c -> customerRepository.save(c))
+						.thenMany(Flux.error(new IllegalArgumentException())));
 
 		StepVerifier.create(data).expectError().verify();
 
 		StepVerifier.create(customerRepository.findAll()).expectNextCount(0)
-			.verifyComplete();
+				.verifyComplete();
 	}
 
 	@Test
 	public void operator() {
 
 		var data = Flux.just(new Customer(null, "1"), new Customer(null, "2"))
-			.flatMap(c -> customerRepository.save(c))
-			.thenMany(Flux.error(new IllegalArgumentException()))
-			.as(transactionalOperator::transactional);
+				.flatMap(c -> customerRepository.save(c))
+				.thenMany(Flux.error(new IllegalArgumentException()))
+				.as(transactionalOperator::transactional);
 
 		StepVerifier.create(data).expectError().verify();
 
 		StepVerifier.create(customerRepository.findAll()).expectNextCount(0)
-			.verifyComplete();
+				.verifyComplete();
 	}
 
 }

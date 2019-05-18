@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
-
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {
@@ -17,7 +16,7 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	private DatabaseClient databaseClient;
 
 	@Autowired
-	private CustomerRepository customerRepository;
+	private SimpleCustomerRepository customerRepository;
 
 	@Override
 	public DatabaseClient getDatabaseClient() {

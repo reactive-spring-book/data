@@ -6,6 +6,7 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,7 +17,7 @@ import java.util.function.BiFunction;
 
 // <1>
 @Log4j2
-@Service
+@Component
 @RequiredArgsConstructor
 class CustomerRepository implements SimpleCustomerRepository {
 

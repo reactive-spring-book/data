@@ -20,7 +20,7 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 	private DatabaseClient databaseClient;
 
 	@Autowired
-	private CustomerRepository customerRepository;
+	private SimpleCustomerRepository customerRepository;
 
 	@Override
 	public DatabaseClient getDatabaseClient() {
