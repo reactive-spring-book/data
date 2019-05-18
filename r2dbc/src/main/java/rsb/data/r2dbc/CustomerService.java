@@ -10,13 +10,19 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class CustomerService {
 
-	private final SimpleCustomerRepository repository;
-
 	private final TransactionalOperator operator;
 
 	@Transactional
-	public Flux<Customer> execute(Flux<Customer> customerFlux) {
+	public Flux<Customer> transactional(Flux<Customer> customerFlux) {
 		return customerFlux;
+	}
+
+	public Flux<Customer> execute(Flux<Customer> customerFlux) {
+		return this.operator.execute(status -> customerFlux);
+	}
+
+	public Flux<Customer> operator(Flux<Customer> customerFlux) {
+		return customerFlux.as(this.operator::transactional);
 	}
 
 }

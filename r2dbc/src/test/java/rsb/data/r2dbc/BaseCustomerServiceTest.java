@@ -41,7 +41,7 @@ abstract public class BaseCustomerServiceTest {
 	public void transactional() {
 
 		var data = this.customerService
-				.execute(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
+				.transactional(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
 						.flatMap(c -> customerRepository.save(c))
 						.thenMany(Flux.error(new IllegalArgumentException())));
 
@@ -54,8 +54,8 @@ abstract public class BaseCustomerServiceTest {
 	@Test
 	public void execute() {
 
-		var data = transactionalOperator.execute(
-				status -> Flux.just(new Customer(null, "1"), new Customer(null, "2"))
+		var data = customerService
+				.execute(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
 						.flatMap(c -> customerRepository.save(c))
 						.thenMany(Flux.error(new IllegalArgumentException())));
 
@@ -68,10 +68,10 @@ abstract public class BaseCustomerServiceTest {
 	@Test
 	public void operator() {
 
-		var data = Flux.just(new Customer(null, "1"), new Customer(null, "2"))
-				.flatMap(c -> customerRepository.save(c))
-				.thenMany(Flux.error(new IllegalArgumentException()))
-				.as(transactionalOperator::transactional);
+		var data = customerService
+				.operator(Flux.just(new Customer(null, "1"), new Customer(null, "2"))
+						.flatMap(c -> customerRepository.save(c))
+						.thenMany(Flux.error(new IllegalArgumentException())));
 
 		StepVerifier.create(data).expectError().verify();
 

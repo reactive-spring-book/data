@@ -15,8 +15,8 @@ public class Customer {
 
 	private String email;
 
-	Customer(String e) {
-		this.email = e;
+	Customer(String email) {
+		this.email = email;
 	}
 
 }

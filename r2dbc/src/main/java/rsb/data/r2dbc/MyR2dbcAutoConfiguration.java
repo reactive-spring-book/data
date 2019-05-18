@@ -39,9 +39,8 @@ public class MyR2dbcAutoConfiguration {
 	}
 
 	@Bean
-	CustomerService customerService(SimpleCustomerRepository customerRepository,
-			TransactionalOperator transactionalOperator) {
-		return new CustomerService(customerRepository, transactionalOperator);
+	CustomerService customerService(TransactionalOperator transactionalOperator) {
+		return new CustomerService(transactionalOperator);
 	}
 
 }
