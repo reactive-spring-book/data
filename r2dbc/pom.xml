@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
@@ -11,6 +12,17 @@
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
+
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-pool</artifactId>
+        </dependency>
+
+
+        <!--        You get it from http://repo.spring.io , 0.1.0.M1 or bleeding-edge snapshots.
+
+        -->
+
         <!--
         <dependency>
                 <groupId>io.projectreactor.addons</groupId>
@@ -29,9 +41,18 @@
                 <artifactId>r2dbc-postgresql</artifactId>
             </dependency>
         -->
+        <!--  <dependency>
+              <groupId>org.springframework.data</groupId>
+              <artifactId>spring-data-r2dbc</artifactId>
+          </dependency>-->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-r2dbc</artifactId>
+            <groupId>org.springframework.boot.experimental</groupId>
+            <artifactId>spring-boot-starter-r2dbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot.experimental</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
         </dependency>
         <dependency>
             <groupId>io.r2dbc</groupId>

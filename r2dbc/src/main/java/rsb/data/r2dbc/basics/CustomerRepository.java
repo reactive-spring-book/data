@@ -1,10 +1,10 @@
 package rsb.data.r2dbc.basics;
 
-import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.Result;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -17,14 +17,10 @@ import java.util.function.BiFunction;
 // <1>
 @Log4j2
 @Service
+@RequiredArgsConstructor
 class CustomerRepository implements SimpleCustomerRepository {
 
 	private final ConnectionFactory connectionFactory;
-
-	// <2>
-	CustomerRepository(PostgresqlConnectionFactory pgc) {
-		this.connectionFactory = pgc;
-	}
 
 	@Override
 	public Mono<Void> deleteById(Integer id) {
@@ -58,9 +54,6 @@ class CustomerRepository implements SimpleCustomerRepository {
 	@Override
 	public Mono<Customer> save(Customer c) {
 
-		// TODO https://github.com/r2dbc/r2dbc-mssql/issues/17
-		// Statement.returnGeneratedKeys is available in R2DBC M7
-
 		Flux<Result> mapMany = Mono.from(this.connectionFactory.create())
 				.flatMapMany(connection -> connection
 						.createStatement("INSERT INTO customer(email) VALUES($1)")
@@ -72,7 +65,6 @@ class CustomerRepository implements SimpleCustomerRepository {
 			return new Customer(id, c.getEmail());
 		}));
 		return results.single();
-		// return mapMany.then(Mono.just(new Customer(c.getId(), c.getEmail())));
 	}
 
 }

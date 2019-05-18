@@ -26,15 +26,20 @@ public class CustomerService {
 	}
 
 	public Flux<Customer> saveAllEmailsExecute(String... emails) {
-		return this.operator.execute(status -> this.doSaveAllEmails(emails));
+		return this.doSaveAllEmails(emails);
 	}
 
 	private Flux<Customer> doSaveAllEmails(String... emails) {
 		Assert.isTrue(emails.length > 0, "you must provide more than one email");
-		return Flux.just(emails).map(c -> {
-			Assert.isTrue(c != null && c.contains("@"), "the customer must be non-null");
-			return c;
-		}).map(e -> new Customer(null, e)).flatMap(this.repository::save);
+		return Flux //
+				.just(emails) //
+				.map(c -> { //
+					var good = (c != null && c.contains("@"));
+					Assert.isTrue(good, "you must provide a valid, non-null email");
+					return (c);
+				})//
+				.map(e -> new Customer(null, e))//
+				.flatMap(this.repository::save);
 	}
 
 }
