@@ -21,7 +21,7 @@ public class CustomerRepositoryTest extends BaseRepositoryTest {
 
 	@Override
 	public DatabaseClient getDatabaseClient() {
-		return databaseClient;
+		return this.databaseClient;
 	}
 
 	@Override
