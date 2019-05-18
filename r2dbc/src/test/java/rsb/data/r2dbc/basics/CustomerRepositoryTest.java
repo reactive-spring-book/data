@@ -9,9 +9,6 @@ import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 import rsb.data.r2dbc.dbc.CustomerRepository;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {

@@ -2,11 +2,13 @@ package rsb.data.r2dbc.springdata;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.Assert;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import rsb.data.r2dbc.Customer;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
+@Component
 @RequiredArgsConstructor
 class SpringDataCustomerRepository implements SimpleCustomerRepository {
 
