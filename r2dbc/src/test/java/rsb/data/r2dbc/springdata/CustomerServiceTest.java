@@ -20,12 +20,10 @@ public class CustomerServiceTest extends BaseCustomerServiceTest {
 	@Autowired
 	private CustomerService customerService;
 
-	@Override
 	protected CustomerService getService() {
 		return this.customerService;
 	}
 
-	@Override
 	protected SimpleCustomerRepository getRepository() {
 		return this.repository;
 	}
