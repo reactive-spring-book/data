@@ -1,7 +1,6 @@
 package rsb.data.r2dbc.springdata;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.Assert;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

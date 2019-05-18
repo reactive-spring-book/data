@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 @Log4j2
-public abstract class BaseRepositoryTest {
+public abstract class BaseCustomerRepositoryTest {
 
 	// <1>
 	public abstract DatabaseClient getDatabaseClient();
@@ -45,13 +45,14 @@ public abstract class BaseRepositoryTest {
 
 		SimpleCustomerRepository repo = getRepository();
 
-		Mono<Void> createSchema = this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
+		// Mono<Void> createSchema =
+		// this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
 
 		Flux<Void> findAndDelete = repo.findAll()
 				.flatMap(customer -> repo.deleteById(customer.getId())); // <7>
 
 		StepVerifier //
-				.create(createSchema.thenMany(findAndDelete)) // <8>
+				.create(/* createSchema.thenMany */(findAndDelete)) // <8>
 				.expectNextCount(0) //
 				.verifyComplete();
 
