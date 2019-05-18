@@ -15,9 +15,6 @@ import reactor.test.StepVerifier;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-/**
- * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
- */
 @Log4j2
 public abstract class BaseRepositoryTest {
 
