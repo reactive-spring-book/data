@@ -45,14 +45,13 @@ public abstract class BaseCustomerRepositoryTest {
 
 		SimpleCustomerRepository repo = getRepository();
 
-		// Mono<Void> createSchema =
-		// this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
+		Mono<Void> createSchema = this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
 
 		Flux<Void> findAndDelete = repo.findAll()
 				.flatMap(customer -> repo.deleteById(customer.getId())); // <7>
 
 		StepVerifier //
-				.create(/* createSchema.thenMany */(findAndDelete)) // <8>
+				.create(createSchema.thenMany(findAndDelete)) // <8>
 				.expectNextCount(0) //
 				.verifyComplete();
 
