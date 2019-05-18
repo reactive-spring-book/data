@@ -4,12 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.util.FileCopyUtils;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.InputStreamReader;
@@ -23,6 +23,9 @@ public abstract class BaseCustomerRepositoryTest {
 
 	// <2>
 	public abstract SimpleCustomerRepository getRepository();
+
+	@Autowired
+	private CustomerDatabaseInitializer initializer;
 
 	// <3>
 	@Value("classpath:/schema.sql")
@@ -45,15 +48,7 @@ public abstract class BaseCustomerRepositoryTest {
 
 		SimpleCustomerRepository repo = getRepository();
 
-		Mono<Void> createSchema = this.getDatabaseClient().execute().sql(this.sql).then(); // <6>
-
-		Flux<Void> findAndDelete = repo.findAll()
-				.flatMap(customer -> repo.deleteById(customer.getId())); // <7>
-
-		StepVerifier //
-				.create(createSchema.thenMany(findAndDelete)) // <8>
-				.expectNextCount(0) //
-				.verifyComplete();
+		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 
 		// <9>
 		Flux<Customer> insert = Flux.just( //

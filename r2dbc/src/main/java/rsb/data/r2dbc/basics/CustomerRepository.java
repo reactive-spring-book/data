@@ -46,7 +46,6 @@ class CustomerRepository implements SimpleCustomerRepository {
 									row.get("email", String.class));
 
 					return result.map(mapper);
-
 				}));
 	}
 

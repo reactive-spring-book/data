@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager;
 import org.springframework.data.r2dbc.connectionfactory.TransactionAwareConnectionFactoryProxy;
@@ -17,6 +18,7 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 @Configuration
 @EnableTransactionManagement
 @AutoConfigureBefore(ConnectionFactoryAutoConfiguration.class)
+@Import(CustomerDatabaseInitializer.class)
 @RequiredArgsConstructor
 public class MyR2dbcAutoConfiguration {
 
@@ -39,8 +41,9 @@ public class MyR2dbcAutoConfiguration {
 	}
 
 	@Bean
-	CustomerService customerService(TransactionalOperator transactionalOperator) {
-		return new CustomerService(transactionalOperator);
+	CustomerService customerService(SimpleCustomerRepository cr,
+			TransactionalOperator to) {
+		return new CustomerService(cr, to);
 	}
 
 }
