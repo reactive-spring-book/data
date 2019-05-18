@@ -1,4 +1,4 @@
-package rsb.data.r2dbc.dbc;
+package rsb.data.r2dbc.basics;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +7,11 @@ import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.test.context.junit4.SpringRunner;
 import rsb.data.r2dbc.BaseRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
+import rsb.data.r2dbc.dbc.CustomerRepository;
 
-
+/**
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseRepositoryTest {
