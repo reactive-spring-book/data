@@ -70,11 +70,11 @@ abstract public class BaseCustomerServiceTest {
 				.verifyComplete();
 		Flux<Customer> customerFlux = customerService.normalizeEmails();
 		StepVerifier.create(customerFlux).expectNextCount(1).verifyComplete();
+
 		StepVerifier.create(customerRepository.findAll())
 				.expectNextMatches(
 						c -> c.getEmail().toUpperCase().equals(email.toUpperCase()))
-				.expectNextCount(1).verifyComplete();
-
+				.verifyComplete();
 	}
 
 }
