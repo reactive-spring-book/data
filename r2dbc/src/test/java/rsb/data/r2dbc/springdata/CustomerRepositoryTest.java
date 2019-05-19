@@ -10,7 +10,7 @@ import rsb.data.r2dbc.SimpleCustomerRepository;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class CustomerCustomerRepositoryTest extends BaseCustomerRepositoryTest {
+public class CustomerRepositoryTest extends BaseCustomerRepositoryTest {
 
 	@Autowired
 	private DatabaseClient databaseClient;

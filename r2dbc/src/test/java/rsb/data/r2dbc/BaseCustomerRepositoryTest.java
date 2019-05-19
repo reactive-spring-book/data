@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.util.FileCopyUtils;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.InputStreamReader;
@@ -67,6 +68,24 @@ public abstract class BaseCustomerRepositoryTest {
 		Flux<Customer> all = repo.findAll();
 
 		StepVerifier.create(all).expectNextCount(3).verifyComplete();
+	}
+
+	@Test
+	public void update() throws Exception {
+		log.info(getClass().getName());
+		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
+		var repository = getRepository();
+		var email = "test@again.com";
+		var save = repository.save(new Customer(null, email));
+		StepVerifier.create(save).expectNextMatches(p -> p.getId() != null)
+				.verifyComplete();
+		StepVerifier.create(repository.findAll()).expectNextCount(1).verifyComplete();
+		var updateFlux = repository.findAll()
+				.map(c -> new Customer(c.getId(), c.getEmail().toUpperCase()))
+				.flatMap(repository::update);
+		StepVerifier.create(updateFlux)
+				.expectNextMatches(c -> c.getEmail().equals(email.toUpperCase()))
+				.verifyComplete();
 	}
 
 }

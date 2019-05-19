@@ -19,6 +19,16 @@ class SpringDataCustomerRepository implements SimpleCustomerRepository {
 	}
 
 	@Override
+	public Mono<Customer> update(Customer c) {
+		return repository.save(c);
+	}
+
+	@Override
+	public Mono<Customer> findById(Integer id) {
+		return repository.findById(id);
+	}
+
+	@Override
 	public Mono<Void> deleteById(Integer id) {
 		return repository.deleteById(id);
 	}

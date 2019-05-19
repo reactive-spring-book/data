@@ -1,6 +1,8 @@
 package rsb.data.r2dbc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -8,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class CustomerService {
 
@@ -15,17 +18,17 @@ public class CustomerService {
 
 	private final TransactionalOperator operator;
 
-	/*
-	 * @Transactional public Flux<Customer> transactional(Flux<Customer> customerFlux) {
-	 * return customerFlux; }
-	 *
-	 * public Flux<Customer> execute(Flux<Customer> customerFlux) { return
-	 * this.operator.execute(status -> customerFlux); }
-	 */
+	private final CustomerDatabaseInitializer initializer;
+
+	public Publisher<Void> resetDatabase() {
+		return this.initializer.resetCustomerTable();
+	}
 
 	public Flux<Customer> upsert(String email) {
 		var query = errorIfEmailsAreInvalid(this.repository.findAll()
-				.filter(p -> p.getEmail().equalsIgnoreCase(email))
+				.filter(customer -> customer.getEmail().equalsIgnoreCase(email))
+				.flatMap(match -> this.repository
+						.update(new Customer(match.getId(), email)))
 				.switchIfEmpty(this.repository.save(new Customer(null, email))));
 		return this.operator.execute(status -> query);
 	}
@@ -33,15 +36,14 @@ public class CustomerService {
 	@Transactional
 	public Flux<Customer> normalizeEmails() {
 		return errorIfEmailsAreInvalid(this.repository.findAll()
-				.map(c -> new Customer(c.getId(), c.getEmail().toUpperCase()))
-				.flatMap(this.repository::save));
-
+				.flatMap(x -> this.upsert(x.getEmail().toUpperCase())));
 	}
 
 	private static Flux<Customer> errorIfEmailsAreInvalid(Flux<Customer> input) {
-		return input.filter(c -> c.getEmail().contains("@"))
+		return input.log().filter(c -> c.getEmail().contains("@"))
 				.switchIfEmpty(Mono.error(new IllegalArgumentException(
 						"the email needs to be of the form a@b.com!")));
+
 	}
 
 }

@@ -26,6 +26,32 @@ class CustomerRepository implements SimpleCustomerRepository {
 	}
 
 	@Override
+	public Mono<Customer> update(Customer customer) {
+		Mono<Connection> connection = connection();
+		Flux<? extends Result> flatMapMany = connection.flatMapMany(conn -> conn
+				.createStatement("update customer  set email = $1 where id = $2")
+				.bind("$1", customer.getEmail()).bind("$2", customer.getId()).execute());
+		return flatMapMany.then(findById(customer.getId()));
+	}
+
+	private Mono<Customer> doFindById(Mono<Connection> connection, Integer id) {
+		return connection
+				.flatMapMany(conn -> conn
+						.createStatement("select * from customer where id = $1")
+						.bind("$1", id).execute())
+				.flatMap(result -> result.map(this.mapper)).single().log();
+	}
+
+	@Override
+	public Mono<Customer> findById(Integer id) {
+		return doFindById(connection(), id);
+	}
+
+	private final BiFunction<Row, RowMetadata, Customer> mapper = // <3>
+			(row, rowMetadata) -> new Customer(row.get("id", Integer.class),
+					row.get("email", String.class));
+
+	@Override
 	public Mono<Void> deleteById(Integer id) {
 		// <3>
 		return connection().flatMapMany(connection -> connection
@@ -39,11 +65,6 @@ class CustomerRepository implements SimpleCustomerRepository {
 		return connection().flatMapMany(connection -> Flux
 				.from(connection.createStatement("select * from customer ").execute())
 				.flatMap(result -> {
-
-					BiFunction<Row, RowMetadata, Customer> mapper = // <3>
-							(row, rowMetadata) -> new Customer(
-									row.get("id", Integer.class),
-									row.get("email", String.class));
 
 					return result.map(mapper);
 				}));
@@ -59,9 +80,14 @@ class CustomerRepository implements SimpleCustomerRepository {
 
 		Flux<Customer> results = mapMany.flatMap(r -> r.map((row, rowMetadata) -> {
 			var id = Integer.class.cast(row.get("id"));
-			return new Customer(id, c.getEmail());
+			var customer = new Customer(id, c.getEmail());
+			if (log.isDebugEnabled()) {
+				log.debug("the id is " + customer.getId() + " and the email is "
+						+ customer.getEmail());
+			}
+			return customer;
 		}));
-		return results.single();
+		return results.single().log();
 	}
 
 }
