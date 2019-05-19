@@ -13,15 +13,7 @@ import rsb.data.r2dbc.SimpleCustomerRepository;
 public class CustomerRepositoryTest extends BaseCustomerRepositoryTest {
 
 	@Autowired
-	private DatabaseClient databaseClient;
-
-	@Autowired
 	private SimpleCustomerRepository customerRepository;
-
-	@Override
-	public DatabaseClient getDatabaseClient() {
-		return this.databaseClient;
-	}
 
 	@Override
 	public SimpleCustomerRepository getRepository() {

@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.util.FileCopyUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,11 +19,9 @@ import java.io.Reader;
 public abstract class BaseCustomerRepositoryTest {
 
 	// <1>
-	public abstract DatabaseClient getDatabaseClient();
-
-	// <2>
 	public abstract SimpleCustomerRepository getRepository();
 
+	// <2>
 	@Autowired
 	private CustomerDatabaseInitializer initializer;
 
@@ -32,47 +29,63 @@ public abstract class BaseCustomerRepositoryTest {
 	@Value("classpath:/schema.sql")
 	private Resource resource;
 
-	// <4>
 	private String sql;
 
 	@Before
 	public void setupResource() throws Exception {
 		Assert.assertTrue(this.resource.exists());
-		// <5>
 		try (Reader in = new InputStreamReader(this.resource.getInputStream())) {
 			this.sql = FileCopyUtils.copyToString(in);
 		}
 	}
 
 	@Test
-	public void all() throws Exception {
+	public void saveAndFindAll() {
 
-		SimpleCustomerRepository repo = getRepository();
+		var repository = getRepository();
 
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 
-		// <9>
-		Flux<Customer> insert = Flux.just( //
+		var insert = Flux.just( //
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //
 				new Customer(null, "third@email.com")) //
-				.flatMap(repo::save); // <10>
+				.flatMap(repository::save); //
 
 		StepVerifier //
 				.create(insert) //
 				.expectNextCount(2) //
 				.expectNextMatches(customer -> customer.getId() != null
 						&& customer.getId() > 0 && customer.getEmail() != null)
-				.verifyComplete(); // <11>
+				.verifyComplete(); //
 
-		Flux<Customer> all = repo.findAll();
-
-		StepVerifier.create(all).expectNextCount(3).verifyComplete();
 	}
 
 	@Test
-	public void update() throws Exception {
-		log.info(getClass().getName());
+	public void findById() {
+
+		var repository = getRepository();
+
+		var insert = Flux.just( //
+				new Customer(null, "first@email.com"), //
+				new Customer(null, "second@email.com"), //
+				new Customer(null, "third@email.com")) //
+				.flatMap(repository::save); //
+		var all = repository.findAll().flatMap(c -> repository.deleteById(c.getId()))
+				.thenMany(insert.thenMany(repository.findAll()));
+
+		StepVerifier.create(all).expectNextCount(3).verifyComplete();
+
+		var recordsById = repository.findAll()
+				.flatMap(customer -> Mono.zip(Mono.just(customer),
+						repository.findById(customer.getId())))
+				.filterWhen(tuple2 -> Mono.just(tuple2.getT1().equals(tuple2.getT2())));
+
+		StepVerifier.create(recordsById).expectNextCount(3).verifyComplete();
+	}
+
+	@Test
+	public void update() {
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 		var repository = getRepository();
 		var email = "test@again.com";
