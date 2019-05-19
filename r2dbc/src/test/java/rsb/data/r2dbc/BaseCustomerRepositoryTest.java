@@ -34,9 +34,30 @@ public abstract class BaseCustomerRepositoryTest {
 	@Before
 	public void setupResource() throws Exception {
 		Assert.assertTrue(this.resource.exists());
-		try (Reader in = new InputStreamReader(this.resource.getInputStream())) {
+		try (var in = new InputStreamReader(this.resource.getInputStream())) {
 			this.sql = FileCopyUtils.copyToString(in);
 		}
+	}
+
+	@Test
+	public void delete() {
+
+		var repository = getRepository();
+		var data = repository.findAll().flatMap(c -> repository.deleteById(c.getId()))
+				.thenMany(Flux.just( //
+						new Customer(null, "first@email.com"), //
+						new Customer(null, "second@email.com"), //
+						new Customer(null, "third@email.com"))) //
+				.flatMap(repository::save); //
+
+		StepVerifier.create(data).expectNextCount(3).verifyComplete();
+
+		StepVerifier
+				.create(repository.findAll().take(1)
+						.flatMap(customer -> repository.deleteById(customer.getId())))
+				.verifyComplete();
+
+		StepVerifier.create(repository.findAll()).expectNextCount(2).verifyComplete();
 	}
 
 	@Test
