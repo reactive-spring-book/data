@@ -20,6 +20,7 @@
         <module>r2dbc</module>
         <module>mongodb</module>
     </modules>
+    <!-- tag::r2dbc-bom[] -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -30,23 +31,9 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-        <!--  <dependencies>
-             <dependency>
-                 <groupId>io.r2dbc</groupId>
-                 <artifactId>r2dbc-bom</artifactId>
-                 <version>${r2dbc-releasetrain.version}</version>
-                 <type>pom</type>
-                 <scope>import</scope>
-             </dependency>
-             <dependency>
-                 <groupId>org.springframework.data</groupId>
-                 <artifactId>spring-data-r2dbc</artifactId>
-                 <version>${spring-data-r2dbc.version}</version>
-             </dependency>
-
-
-         </dependencies>-->
     </dependencyManagement>
+    <!-- end::r2dbc-bom[] -->
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -20,7 +20,7 @@ abstract public class BaseCustomerServiceTest {
 
 	@Before
 	public void reset() throws Exception {
-		this.customerRepository = getCustomerRepository();
+		this.customerRepository = this.getCustomerRepository();
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 	}
 

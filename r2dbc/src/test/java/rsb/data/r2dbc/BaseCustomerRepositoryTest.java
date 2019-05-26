@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 @Log4j2
 public abstract class BaseCustomerRepositoryTest {
@@ -42,7 +41,7 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void delete() {
 
-		var repository = getRepository();
+		var repository = this.getRepository();
 		var data = repository.findAll().flatMap(c -> repository.deleteById(c.getId()))
 				.thenMany(Flux.just( //
 						new Customer(null, "first@email.com"), //
@@ -50,20 +49,26 @@ public abstract class BaseCustomerRepositoryTest {
 						new Customer(null, "third@email.com"))) //
 				.flatMap(repository::save); //
 
-		StepVerifier.create(data).expectNextCount(3).verifyComplete();
-
-		StepVerifier
-				.create(repository.findAll().take(1)
-						.flatMap(customer -> repository.deleteById(customer.getId())))
+		StepVerifier //
+				.create(data) //
+				.expectNextCount(3) //
 				.verifyComplete();
 
-		StepVerifier.create(repository.findAll()).expectNextCount(2).verifyComplete();
+		StepVerifier //
+				.create(repository.findAll().take(1)
+						.flatMap(customer -> repository.deleteById(customer.getId())))
+				.verifyComplete(); //
+
+		StepVerifier //
+				.create(repository.findAll()) //
+				.expectNextCount(2) //
+				.verifyComplete();
 	}
 
 	@Test
 	public void saveAndFindAll() {
 
-		var repository = getRepository();
+		var repository = this.getRepository();
 
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 
@@ -85,7 +90,7 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void findById() {
 
-		var repository = getRepository();
+		var repository = this.getRepository();
 
 		var insert = Flux.just( //
 				new Customer(null, "first@email.com"), //
@@ -107,18 +112,29 @@ public abstract class BaseCustomerRepositoryTest {
 
 	@Test
 	public void update() {
-		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
-		var repository = getRepository();
+		var repository = this.getRepository();
+
+		StepVerifier //
+				.create(this.initializer.resetCustomerTable()) //
+				.verifyComplete(); //
+
 		var email = "test@again.com";
 		var save = repository.save(new Customer(null, email));
-		StepVerifier.create(save).expectNextMatches(p -> p.getId() != null)
+		StepVerifier //
+				.create(save) //
+				.expectNextMatches(p -> p.getId() != null) //
 				.verifyComplete();
-		StepVerifier.create(repository.findAll()).expectNextCount(1).verifyComplete();
-		var updateFlux = repository.findAll()
-				.map(c -> new Customer(c.getId(), c.getEmail().toUpperCase()))
+		StepVerifier //
+				.create(repository.findAll()) //
+				.expectNextCount(1) //
+				.verifyComplete();
+		var updateFlux = repository //
+				.findAll() //
+				.map(c -> new Customer(c.getId(), c.getEmail().toUpperCase())) //
 				.flatMap(repository::update);
-		StepVerifier.create(updateFlux)
-				.expectNextMatches(c -> c.getEmail().equals(email.toUpperCase()))
+		StepVerifier //
+				.create(updateFlux) //
+				.expectNextMatches(c -> c.getEmail().equals(email.toUpperCase())) //
 				.verifyComplete();
 	}
 
