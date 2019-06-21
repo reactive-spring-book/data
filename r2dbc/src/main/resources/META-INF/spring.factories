@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=rsb.data.r2dbc.MyR2dbcAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=rsb.data.r2dbc.CommonAutoConfiguration
