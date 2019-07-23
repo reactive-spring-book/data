@@ -15,36 +15,37 @@ import reactor.core.publisher.Mono;
 public class CustomerService {
 
 	private final SimpleCustomerRepository repository;
+
 	private final TransactionalOperator operator;
+
 	private final CustomerDatabaseInitializer initializer;
 
 	public Publisher<Void> resetDatabase() {
 		return this.initializer.resetCustomerTable();
 	}
 
-	//<1>
+	// <1>
 	public Flux<Customer> upsert(String email) {
 		var customers = this.repository.findAll()
-			.filter(customer -> customer.getEmail().equalsIgnoreCase(email))
-			.flatMap(match -> this.repository
-				.update(new Customer(match.getId(), email)))
-			.switchIfEmpty(this.repository.save(new Customer(null, email)));
+				.filter(customer -> customer.getEmail().equalsIgnoreCase(email))
+				.flatMap(match -> this.repository
+						.update(new Customer(match.getId(), email)))
+				.switchIfEmpty(this.repository.save(new Customer(null, email)));
 		var validatedResults = errorIfEmailsAreInvalid(customers);
 		return this.operator.transactional(validatedResults);
 	}
 
-	//<2>
+	// <2>
 	@Transactional
 	public Flux<Customer> normalizeEmails() {
 		return errorIfEmailsAreInvalid(this.repository.findAll()
-			.flatMap(x -> this.upsert(x.getEmail().toUpperCase())));
+				.flatMap(x -> this.upsert(x.getEmail().toUpperCase())));
 	}
 
 	private static Flux<Customer> errorIfEmailsAreInvalid(Flux<Customer> input) {
 		return input.filter(c -> c.getEmail().contains("@"))
-			.switchIfEmpty(Mono.error(new IllegalArgumentException(
-				"the email needs to be of the form a@b.com!")));
-
+				.switchIfEmpty(Mono.error(new IllegalArgumentException(
+						"the email needs to be of the form a@b.com!")));
 	}
 
 }

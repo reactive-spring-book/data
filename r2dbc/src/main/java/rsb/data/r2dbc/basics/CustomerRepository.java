@@ -4,7 +4,6 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,20 +14,19 @@ import java.util.function.BiFunction;
 
 @Repository // <1>
 @Log4j2
-@Component
 @RequiredArgsConstructor
 class CustomerRepository implements SimpleCustomerRepository {
 
 	// <2>
 	private final ConnectionManager connectionManager;
 
-	private final BiFunction<Row, RowMetadata, Customer> mapper = // <3>
-		(row, rowMetadata) -> new Customer(row.get("id", Integer.class),
-			row.get("email", String.class));
+	private final BiFunction<Row, RowMetadata, Customer> mapper = (row,
+			rowMetadata) -> new Customer(row.get("id", Integer.class),
+					row.get("email", String.class));
 
 	@Override
 	public Mono<Customer> update(Customer customer) {
-		// <4>
+		// <3>
 		return connectionManager.inConnection(conn -> Flux
 				.from(conn.createStatement("update customer set email = $1 where id = $2") //
 						.bind("$1", customer.getEmail()) //
@@ -39,10 +37,12 @@ class CustomerRepository implements SimpleCustomerRepository {
 
 	@Override
 	public Mono<Customer> findById(Integer id) {
+		// <4>
 		return connectionManager
 				.inConnection(conn -> Flux
 						.from(conn.createStatement("select * from customer where id = $1")
-								.bind("$1", id).execute()))
+								.bind("$1", id)//
+								.execute()))
 				.flatMap(result -> result.map(this.mapper))//
 				.single()//
 				.log();
@@ -51,7 +51,7 @@ class CustomerRepository implements SimpleCustomerRepository {
 	@Override
 	public Mono<Void> deleteById(Integer id) {
 		return connectionManager.inConnection(conn -> Flux
-				.from(conn.createStatement("DELETE FROM customer where id = $1") //
+				.from(conn.createStatement("delete from customer where id = $1") //
 						.bind("$1", id) //
 						.execute()) //
 		) //
@@ -60,8 +60,8 @@ class CustomerRepository implements SimpleCustomerRepository {
 
 	@Override
 	public Flux<Customer> findAll() {
-		return connectionManager.inConnection(connection -> Flux
-				.from(connection.createStatement("select * from customer ").execute())
+		return connectionManager.inConnection(conn -> Flux
+				.from(conn.createStatement("select * from customer ").execute())
 				.flatMap(result -> result.map(mapper)));
 	}
 

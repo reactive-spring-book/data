@@ -13,8 +13,9 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 public class CommonAutoConfiguration {
 
 	@Bean
-	CustomerService defaultCustomerService(
-		SimpleCustomerRepository cr, TransactionalOperator to, CustomerDatabaseInitializer dbi) {
+	CustomerService defaultCustomerService(SimpleCustomerRepository cr,
+			TransactionalOperator to, CustomerDatabaseInitializer dbi) {
 		return new CustomerService(cr, to, dbi);
 	}
+
 }

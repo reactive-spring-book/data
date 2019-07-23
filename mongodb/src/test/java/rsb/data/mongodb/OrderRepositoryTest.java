@@ -26,13 +26,13 @@ public class OrderRepositoryTest {
 			new Order(UUID.randomUUID().toString(), "2"),
 			new Order(UUID.randomUUID().toString(), "2"));
 
-	private final Predicate<Order> predicate = order -> this.orders //
+	private final Predicate<Order> predicate = order -> //
+	this.orders //
 			.stream() //
 			.filter(candidateOrder -> candidateOrder.getId()
-					.equalsIgnoreCase(order.getId())) //
-			.filter(candidateOrder -> candidateOrder.getProductId()
-					.equalsIgnoreCase(order.getProductId()))
-			.count() != 0;
+					.equalsIgnoreCase(order.getId()))//
+			.anyMatch(candidateOrder -> candidateOrder.getProductId()
+					.equalsIgnoreCase(order.getProductId()));
 
 	@Before
 	public void before() {

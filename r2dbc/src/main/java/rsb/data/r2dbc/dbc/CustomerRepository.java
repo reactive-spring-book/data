@@ -20,50 +20,50 @@ public class CustomerRepository implements SimpleCustomerRepository {
 	@Override
 	public Flux<Customer> findAll() {
 		return databaseClient.select() //
-			.from(Customer.class) //
-			.fetch() //
-			.all();
+				.from(Customer.class) //
+				.fetch() //
+				.all();
 	}
 
 	// <2>
 	@Override
 	public Mono<Customer> save(Customer c) {
 		return this.databaseClient.insert() //
-			.into(Customer.class) //
-			.table("customer") //
-			.using(c) //
-			.map((row, rowMetadata) -> new Customer(row.get("id", Integer.class), c.getEmail()))//
-			.first();
+				.into(Customer.class) //
+				.table("customer") //
+				.using(c) //
+				.map((row, rowMetadata) -> new Customer(row.get("id", Integer.class),
+						c.getEmail()))//
+				.first();
 	}
 
 	@Override
 	public Mono<Customer> update(Customer c) {
 		return databaseClient.update().table(Customer.class).using(c).fetch()
-			.rowsUpdated().filter(countOfUpdates -> countOfUpdates > 0)
-			.switchIfEmpty(Mono.error(
-				new IllegalArgumentException("couldn't update " + c.toString())))
-			.thenMany(findById(c.getId())).single();
+				.rowsUpdated().filter(countOfUpdates -> countOfUpdates > 0)
+				.switchIfEmpty(Mono.error(
+						new IllegalArgumentException("couldn't update " + c.toString())))
+				.thenMany(findById(c.getId())).single();
 	}
 
 	@Override
 	public Mono<Customer> findById(Integer id) {
-		return this.databaseClient
-			.execute() //
-			.sql("select * from customer where id = $1") //
-			.bind("$1", id) //
-			.fetch()  //
-			.first()  //
-			.map(map -> new Customer(Integer.class.cast(map.get("id")),
-				String.class.cast(map.get("email"))));
+		return this.databaseClient.execute() //
+				.sql("select * from customer where id = $1") //
+				.bind("$1", id) //
+				.fetch() //
+				.first() //
+				.map(map -> new Customer(Integer.class.cast(map.get("id")),
+						String.class.cast(map.get("email"))));
 	}
 
 	// <3>
 	@Override
 	public Mono<Void> deleteById(Integer id) {
 		return this.databaseClient.execute() //
-			.sql("DELETE FROM customer where id = $1") //
-			.bind("$1", id) //
-			.then();
+				.sql("DELETE FROM customer where id = $1") //
+				.bind("$1", id) //
+				.then();
 	}
 
 }

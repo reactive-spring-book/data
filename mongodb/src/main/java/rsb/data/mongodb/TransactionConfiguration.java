@@ -1,7 +1,5 @@
 package rsb.data.mongodb;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.ReactiveMongoTransactionManager;
@@ -9,13 +7,20 @@ import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.reactive.TransactionalOperator;
 
-import java.io.IOException;
+@EnableTransactionManagement
+class TransactionConfiguration {
 
-@SpringBootApplication
-public class MongoDbApplication {
+	// <1>
+	@Bean
+	TransactionalOperator transactionalOperator(ReactiveTransactionManager txm) {
+		return TransactionalOperator.create(txm);
+	}
 
-	public static void main(String args[]) throws IOException {
-		SpringApplication.run(MongoDbApplication.class, args);
+	// <2>
+	@Bean
+	ReactiveTransactionManager reactiveMongoTransactionManager(
+			ReactiveMongoDatabaseFactory rdf) {
+		return new ReactiveMongoTransactionManager(rdf);
 	}
 
 }
