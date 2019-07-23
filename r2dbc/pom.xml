@@ -12,6 +12,7 @@
         <relativePath>..</relativePath>
     </parent>
     <dependencies>
+
         <!-- tag::spring-boot-dependencies-r2dbc[] -->
         <dependency>
             <groupId>io.r2dbc</groupId>
@@ -29,12 +30,8 @@
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-postgresql</artifactId>
         </dependency>
-        <!-- tag::spring-boot-dependencies-r2dbc[] -->
+        <!-- end::spring-boot-dependencies-r2dbc[] -->
 
-        <!-- ToDo
-        this is required to use the autoconfiguration.
-        It'll go away in due time, one hopes.
-        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
