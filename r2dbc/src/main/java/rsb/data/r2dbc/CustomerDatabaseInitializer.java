@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 @Component
-public class CustomerDatabaseInitializer {
+class CustomerDatabaseInitializer {
 
 	private final TransactionalOperator transactionalOperator;
 
@@ -38,7 +38,7 @@ public class CustomerDatabaseInitializer {
 	}
 
 	public Publisher<Void> resetCustomerTable() {
-		Mono<Void> createSchema = client.execute().sql(this.sql).then()
+		Mono<Void> createSchema = client.execute(this.sql).then()
 				.onErrorResume(throwable -> Mono.empty());
 		Flux<Void> findAndDelete = repository.findAll()
 				.flatMap(customer -> repository.deleteById(customer.getId())); // <7>

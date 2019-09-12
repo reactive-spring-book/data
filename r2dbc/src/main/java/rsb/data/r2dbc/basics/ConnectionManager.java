@@ -26,7 +26,8 @@ class ConnectionManager {
 	}
 
 	private Mono<ConnectionCloseHolder> connection() {
-		return ConnectionFactoryUtils.getConnection(connectionFactory).map(Tuple2::getT1)
+		return ConnectionFactoryUtils//
+				.getConnection(connectionFactory)//
 				.map(c -> new ConnectionCloseHolder(c, this::closeConnection));
 	}
 

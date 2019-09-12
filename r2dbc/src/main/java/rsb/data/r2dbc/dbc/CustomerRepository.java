@@ -48,8 +48,7 @@ public class CustomerRepository implements SimpleCustomerRepository {
 
 	@Override
 	public Mono<Customer> findById(Integer id) {
-		return this.databaseClient.execute() //
-				.sql("select * from customer where id = $1") //
+		return this.databaseClient.execute("select * from customer where id = $1") //
 				.bind("$1", id) //
 				.fetch() //
 				.first() //
@@ -60,8 +59,7 @@ public class CustomerRepository implements SimpleCustomerRepository {
 	// <3>
 	@Override
 	public Mono<Void> deleteById(Integer id) {
-		return this.databaseClient.execute() //
-				.sql("DELETE FROM customer where id = $1") //
+		return this.databaseClient.execute("DELETE FROM customer where id = $1") //
 				.bind("$1", id) //
 				.then();
 	}

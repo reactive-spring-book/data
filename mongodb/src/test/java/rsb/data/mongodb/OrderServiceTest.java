@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 @RunWith(SpringRunner.class)
 @DataMongoTest // <1>
 @Log4j2
-@Import(OrderService.class)
+@Import({ TransactionConfiguration.class, OrderService.class })
 public class OrderServiceTest {
 
 	@Autowired
@@ -67,7 +67,7 @@ public class OrderServiceTest {
 
 		Publisher<Order> orders = this.repository //
 				.deleteAll() //
-				.thenMany(this.service.createOrdersExecute("1", "2", "3")) //
+				.thenMany(this.service.createOrders("1", "2", "3")) //
 				.thenMany(this.repository.findAll());
 
 		StepVerifier //
@@ -79,19 +79,18 @@ public class OrderServiceTest {
 	// <5>
 	@Test
 	public void executeRollback() {
-		this.runTransactionalTest(this.service.createOrdersExecute("1", "2", null));
+		this.runTransactionalTest(this.service.createOrders("1", "2", null));
 	}
 
 	// <5>
 	@Test
 	public void transactionalOperatorRollback() {
-		this.runTransactionalTest(
-				this.service.createOrdersTransactionalOperator("1", "2", null));
+		this.runTransactionalTest(this.service.createOrders("1", "2", null));
 	}
 
 	@Test
 	public void transactionalRollback() {
-		this.runTransactionalTest(this.service.createOrdersTransactional("1", "2", null));
+		this.runTransactionalTest(this.service.createOrders("1", "2", null));
 	}
 
 	private void runTransactionalTest(Flux<Order> ordersInTx) {
