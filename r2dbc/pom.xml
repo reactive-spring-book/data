@@ -13,7 +13,6 @@
     </parent>
     <dependencies>
         <!-- tag::spring-boot-dependencies-r2dbc[] -->
-      
         <dependency>
             <groupId>org.springframework.boot.experimental</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
@@ -24,10 +23,6 @@
         </dependency>
         <!-- end::spring-boot-dependencies-r2dbc[] -->
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
