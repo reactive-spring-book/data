@@ -8,9 +8,9 @@ import org.springframework.data.r2dbc.connectionfactory.ConnectionFactoryUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Component
@@ -20,9 +20,15 @@ class ConnectionManager {
 	private final ConnectionFactory connectionFactory;
 
 	public <T> Flux<T> inConnection(Function<Connection, Flux<T>> action) {
-		Function<ConnectionCloseHolder, Publisher<?>> close = ConnectionCloseHolder::close;
+
+		Function<ConnectionCloseHolder, Publisher<?>> closeFunction = ConnectionCloseHolder::close;
+
+		BiFunction<ConnectionCloseHolder, Throwable, Publisher<?>> closeBiFunction = (
+				connectionCloseHolder,
+				throwable) -> closeFunction.apply(connectionCloseHolder);
+
 		return Flux.usingWhen(connection(), holder -> action.apply(holder.connection),
-				close, close, close);
+				closeFunction, closeBiFunction, closeFunction);
 	}
 
 	private Mono<ConnectionCloseHolder> connection() {
