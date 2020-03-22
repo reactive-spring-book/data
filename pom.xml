@@ -31,7 +31,6 @@
         </dependencies>
     </dependencyManagement>
     <!-- end::r2dbc-bom[] -->
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
