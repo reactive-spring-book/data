@@ -1,8 +1,10 @@
 package rsb.data.r2dbc;
 
+import org.springframework.data.repository.NoRepositoryBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@NoRepositoryBean
 public interface SimpleCustomerRepository {
 
 	Mono<Customer> save(Customer c);
