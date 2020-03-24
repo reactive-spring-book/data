@@ -78,18 +78,7 @@ public class OrderServiceTest {
 
 	// <5>
 	@Test
-	public void executeRollback() {
-		this.runTransactionalTest(this.service.createOrders("1", "2", null));
-	}
-
-	// <5>
-	@Test
 	public void transactionalOperatorRollback() {
-		this.runTransactionalTest(this.service.createOrders("1", "2", null));
-	}
-
-	@Test
-	public void transactionalRollback() {
 		this.runTransactionalTest(this.service.createOrders("1", "2", null));
 	}
 
