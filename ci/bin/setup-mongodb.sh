@@ -5,17 +5,21 @@ mkdir -p var/db var/log
 
 # https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.3.tgz
 
-if [[ ! -d downloads/mongodb-linux-x86_64-ubuntu1604-${MONGO_VERSION} ]] ; then
+MONGO_DL_NAME=mongodb-linux-x86_64-ubuntu1804-${MONGO_VERSION}
+MONGO_HOME=$(pwd)/downloads/$MONGO_DL_NAME
+
+if [[ ! -d  $MONGO_HOME  ]] ; then
     cd downloads \
-        && wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-${MONGO_VERSION}.tgz \
-        && tar xzf mongodb-linux-x86_64-ubuntu1604-${MONGO_VERSION}.tgz \
+        && wget https://fastdl.mongodb.org/linux/${MONGO_DL_NAME}.tgz \
+        && tar xzf ${MONGO_DL_NAME}.tgz  \
         && cd ..;
 fi
 
 # ubuntu-18.04 
 # is what github actions uses 
  
-MONGO_HOME=$(pwd)/downloads/mongodb-linux-x86_64-ubuntu1804-${MONGO_VERSION}
+
+
 ${MONGO_HOME}/bin/mongod --version
 ${MONGO_HOME}/bin/mongod --dbpath var/db --replSet rs0 --fork --logpath var/log/mongod.log
 sleep 10
