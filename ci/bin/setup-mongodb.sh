@@ -18,7 +18,6 @@ fi
 ${MONGO_HOME}/bin/mongod --version
 ${MONGO_HOME}/bin/mongod --dbpath var/db --replSet rs0 --fork --logpath var/log/mongod.log
 sleep 10
-
 ${MONGO_HOME}/bin/mongo --eval "rs.initiate({_id: 'rs0', members:[{_id: 0, host: '127.0.0.1:27017'}]});"
 sleep 15
 
