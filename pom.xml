@@ -12,8 +12,8 @@
         <relativePath/>
     </parent>
     <modules>
-        <module>r2dbc</module>
-<!--        <module>mongodb</module>-->
+<!--        <module>r2dbc</module>-->
+        <module>mongodb</module>
     </modules>
     <!-- tag::r2dbc-bom[] -->
     <!-- todo remove this
