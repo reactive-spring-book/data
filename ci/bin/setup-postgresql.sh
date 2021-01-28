@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt install postgresql postgresql-contrib
-cat setup-postgresql.sql  | psql -u postgres 
+cat setup-postgresql.sql  | psql -U postgres 
 psql -U postgres -c "select * from customer "
 
 # sudo -i -u postgres

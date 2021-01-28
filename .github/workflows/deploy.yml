@@ -51,8 +51,9 @@ jobs:
       
       - name : Configure DBs (pt 1)
         run: |
-           ./ci/bin/setup-mongodb.sh
-           ./ci/bin/setup-postgresql.sh
+            cd $GITHUB_WORKSPACE 
+           ./setup-postgresql.sh
+           ./setup-mongodb.sh
 
       - name: Build
         run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
