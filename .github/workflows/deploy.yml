@@ -26,11 +26,12 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-
     services:
       # https://docs.github.com/en/actions/guides/creating-postgresql-service-containers
       postgres:
         image: postgres:12.4
+        ports:
+          - 5432:5432
         env:
           POSTGRES_DB: orders
           POSTGRES_USER: orders 
@@ -41,10 +42,9 @@ jobs:
         #   --health-timeout 5s
         #   --health-retries 5
 
-    steps:
+    steps: select 'hello'   " | PGPASSWORD=orders psql -U orders -h postgres orders
 
-      - name: talk to PSQL 
-        run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=orders psql -U orders  
+      -  run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=orders psql -U orders  
 
       # - uses: actions/checkout@v2
 
