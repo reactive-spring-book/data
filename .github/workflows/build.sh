@@ -2,12 +2,14 @@
 
 cd $GITHUB_WORKSPACE 
 
-apt update   
-apt upgrade
-apt install libcurl3 libcurl-openssl1.0-dev
+sudo apt-get -y update   
+sudo apt-get -y upgrade
+sudo apt-get -y install libcurl3  
+sudo apt-get -y install libcurl-openssl1.0-dev
 
 ./ci/bin/setup-mongodb.sh
 ./ci/bin/setup-postgresql.sh
+
 
 echo "Starting build"
 mkdir -p $HOME/.m2/
