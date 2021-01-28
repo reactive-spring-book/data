@@ -28,14 +28,11 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      # Label used to access the service container
+      # https://docs.github.com/en/actions/guides/creating-postgresql-service-containers
       postgres:
-        # Docker Hub image
         image: postgres
-        # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -46,7 +43,7 @@ jobs:
 
       - name: talk to PSQL 
         run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=postgres psql -U postgres -h localhost postgres 
-        
+
       - uses: actions/checkout@v2
 
       - name: Set up JDK 15
