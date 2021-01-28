@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-@Ignore
-@Disabled
+//@Ignore
+//@Disabled
 @DataMongoTest
 @RunWith(SpringRunner.class)
 public class OrderRepositoryTest {

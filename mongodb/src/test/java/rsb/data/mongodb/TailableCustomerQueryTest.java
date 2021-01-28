@@ -21,8 +21,8 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@Ignore
-@Disabled
+//@Ignore
+//@Disabled
 @Log4j2
 @DataMongoTest
 @RunWith(SpringRunner.class)

@@ -24,8 +24,8 @@ import reactor.test.StepVerifier;
 import java.io.File;
 import java.nio.charset.Charset;
 
-@Disabled
-@Ignore
+//@Disabled
+//@Ignore
 @Log4j2
 @RunWith(SpringRunner.class)
 @DataMongoTest // <1>
