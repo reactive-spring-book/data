@@ -67,7 +67,7 @@ jobs:
           java-version: 15
 
 
-      - name: Cache Maven packages
+      - name: Cache Downloads packages
         uses: actions/cache@v1
         with:
           path: $GITHUB_WORKSPACE/ci/bin/downloads
