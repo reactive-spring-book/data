@@ -13,7 +13,7 @@
     </parent>
     <modules>
         <module>r2dbc</module>
-        <module>mongodb</module>
+<!--        <module>mongodb</module>-->
     </modules>
     <!-- tag::r2dbc-bom[] -->
     <!-- todo remove this
@@ -41,35 +41,9 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- <dependency>
-             <groupId>org.springframework.boot</groupId>
-             <artifactId>spring-boot-starter-test</artifactId>
-             <scope>test</scope>
-         </dependency>
-         <dependency>
-             <groupId>io.projectreactor</groupId>
-             <artifactId>reactor-test</artifactId>
-             <scope>test</scope>
-         </dependency>-->
+
     </dependencies>
-    <dependencyManagement>
-<!--        <dependencies>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-test</artifactId>
-                <version> ${}</version>
-                <optional>true</optional>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>3.4.2</version>
-                <optional>true</optional>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>-->
-    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>

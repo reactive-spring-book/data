@@ -3,7 +3,6 @@ MONGO_VERSION=4.4.3
 mkdir -p downloads
 mkdir -p var/db var/log
 
-# https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.3.tgz
 
 MONGO_DL_NAME=mongodb-linux-x86_64-ubuntu1804-${MONGO_VERSION}
 MONGO_HOME=$GITHUB_WORKSPACE/ci/bin/downloads/$MONGO_DL_NAME

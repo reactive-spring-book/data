@@ -9,8 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rsb.data.r2dbc.BaseCustomerRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
-@Disabled
-@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseCustomerRepositoryTest {
