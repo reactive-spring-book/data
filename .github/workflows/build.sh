@@ -2,10 +2,7 @@
 
 cd $GITHUB_WORKSPACE 
 
-sudo apt-get -y update   
-sudo apt-get -y upgrade
-sudo apt-get -y install libcurl3  
-sudo apt-get -y install libcurl-openssl1.0-dev
+ 
 
 # ./ci/bin/setup-mongodb.sh
 # ./ci/bin/setup-postgresql.sh
