@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import reactor.test.StepVerifier;
 
 import java.io.File;
 import java.nio.charset.Charset;
+
+@Disabled
 
 @Log4j2
 @RunWith(SpringRunner.class)

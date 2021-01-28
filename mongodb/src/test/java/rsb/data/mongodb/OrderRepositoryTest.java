@@ -2,6 +2,7 @@ package rsb.data.mongodb;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -14,6 +15,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Disabled
 @DataMongoTest
 @RunWith(SpringRunner.class)
 public class OrderRepositoryTest {
