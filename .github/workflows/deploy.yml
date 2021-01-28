@@ -4,17 +4,10 @@ env:
 
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-
-  KINDLEGEN: /home/runner/bin/kindlegen/kindlegen
-
   SPRING_PROFILES_ACTIVE: ci
-
   GH_PAT: ${{ secrets.GH_PAT }}
   GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
-
-  PIPELINE_REPO_NAME: ${{ secrets.PIPELINE_REPO_NAME }}
-  PIPELINE_ORG_NAME: ${{ secrets.PIPELINE_ORG_NAME }}
 
 on:
   push:
@@ -27,7 +20,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     services:
-      # https://docs.github.com/en/actions/guides/creating-postgresql-service-containers
       postgres:
         image: postgres:12.4
         ports:
@@ -47,9 +39,7 @@ jobs:
 
       - name : Configure MongoDB
         run: |
-          # sudo apt-get -y install libcurl4  
-          # sudo apt-get -y install libcurl-openssl1.0-dev
-          sudo apt-get -y install curl 
+          sudo apt-get -y install curl
           sleep 3
           which curl 
           cd $GITHUB_WORKSPACE/ci/bin
