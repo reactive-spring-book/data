@@ -2,6 +2,9 @@
 
 cd $GITHUB_WORKSPACE 
 
+sudo apt update && sudo apt upgrade
+sudo apt install curl 
+
 ci/bin/setup-mongodb.sh
 ci/bin/setup-postgresql.sh
 
