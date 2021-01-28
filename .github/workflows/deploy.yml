@@ -53,10 +53,11 @@ jobs:
 
       - name : Configure MongoDB
         run: |
-          sudo apt-get -y install libcurl3  
-          sudo apt-get -y install libcurl-openssl1.0-dev
+          sudo apt-get -y install libcurl4  
+          # sudo apt-get -y install libcurl-openssl1.0-dev
           sudo apt-get -y install curl 
           sleep 3
+          which curl 
           cd $GITHUB_WORKSPACE/ci/bin
           ./setup-mongodb.sh
 
