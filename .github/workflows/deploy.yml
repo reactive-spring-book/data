@@ -43,8 +43,8 @@ jobs:
         #   --health-retries 5
 
     steps: 
-      - run: select 'hello'   " | PGPASSWORD=orders psql -U orders -h postgres orders
-      - run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=orders psql -U orders  
+      - run: echo "select 'hello' " | PGPASSWORD=orders psql -U orders -h postgres orders
+      # - run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=orders psql -U orders  
 
       # - uses: actions/checkout@v2
 
