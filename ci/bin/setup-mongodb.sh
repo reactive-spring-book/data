@@ -6,9 +6,9 @@ mkdir -p var/db var/log
 # https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.3.tgz
 
 MONGO_DL_NAME=mongodb-linux-x86_64-ubuntu1804-${MONGO_VERSION}
-MONGO_HOME=$(pwd)/downloads/$MONGO_DL_NAME
+MONGO_HOME=$GITHUB_WORKSPACE/ci/bin/downloads/$MONGO_DL_NAME
 
-if [[ ! -d  $MONGO_HOME  ]] ; then
+if [[ ! -d $MONGO_HOME ]] ; then
     cd downloads \
         && wget https://fastdl.mongodb.org/linux/${MONGO_DL_NAME}.tgz \
         && tar xzf ${MONGO_DL_NAME}.tgz  \
