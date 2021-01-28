@@ -44,16 +44,14 @@ jobs:
 
       - name : Configure DBs (pt 1)
         run: |
-          # sudo apt-get -y update   
-          # sudo apt-get -y upgrade
           sudo apt-get -y install libcurl3  
           sudo apt-get -y install libcurl-openssl1.0-dev
       
-      - name : Configure DBs (pt 1)
+      - name : Configure DBs (pt 2)
         run: |
-            cd $GITHUB_WORKSPACE 
-           ./setup-postgresql.sh
-           ./setup-mongodb.sh
+          cd $GITHUB_WORKSPACE/ci/bin
+          ./setup-postgresql.sh
+          ./setup-mongodb.sh
 
       - name: Build
         run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
