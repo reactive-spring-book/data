@@ -73,10 +73,10 @@ jobs:
           key: ${{ runner.os }}-m2
           restore-keys: ${{ runner.os }}-m2
 
-      # - name: Build
-      #   run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
+      - name: Build
+        run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
 
-      # - name: Initiate Pipeline
-      #   run: |
-      #     curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
-      #         --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
+      - name: Initiate Pipeline
+        run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
+              --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
