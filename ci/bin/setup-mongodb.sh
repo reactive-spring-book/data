@@ -15,11 +15,6 @@ if [[ ! -d  $MONGO_HOME  ]] ; then
         && cd ..;
 fi
 
-# ubuntu-18.04 
-# is what github actions uses 
- 
-
-
 ${MONGO_HOME}/bin/mongod --version
 ${MONGO_HOME}/bin/mongod --dbpath var/db --replSet rs0 --fork --logpath var/log/mongod.log
 sleep 10
