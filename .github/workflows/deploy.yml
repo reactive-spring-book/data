@@ -45,10 +45,9 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
 
-
       - name : Configure MongoDB
         run: |
-          sudo apt-get -y install libcurl4  
+          # sudo apt-get -y install libcurl4  
           # sudo apt-get -y install libcurl-openssl1.0-dev
           sudo apt-get -y install curl 
           sleep 3
@@ -57,7 +56,6 @@ jobs:
           ./setup-mongodb.sh
 
 
-      
       - name: Configure PostgreSQL  
         run: |
           echo "select 'hello' " | PGPASSWORD=orders psql -U orders -h localhost orders 
