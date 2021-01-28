@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Ignore
 @Disabled
 @Log4j2
 @DataMongoTest

@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
@@ -24,7 +25,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 @Disabled
-
+@Ignore
 @Log4j2
 @RunWith(SpringRunner.class)
 @DataMongoTest // <1>

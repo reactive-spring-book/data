@@ -1,5 +1,6 @@
 package rsb.data.r2dbc.dbc;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import rsb.data.r2dbc.BaseCustomerRepositoryTest;
 import rsb.data.r2dbc.SimpleCustomerRepository;
 
 @Disabled
+@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CustomerRepositoryTest extends BaseCustomerRepositoryTest {

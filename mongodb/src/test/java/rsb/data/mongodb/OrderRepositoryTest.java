@@ -1,6 +1,7 @@
 package rsb.data.mongodb;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+@Ignore
 @Disabled
 @DataMongoTest
 @RunWith(SpringRunner.class)
