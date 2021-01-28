@@ -42,7 +42,7 @@ jobs:
     steps:
 
       - name: talk to PSQL 
-        run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=postgres psql -U postgres -h localhost postgres 
+        run: echo "create table messages(message varchar(255)) as select 'hello, world' ; " | PGPASSWORD=postgres psql -U postgres  
 
       - uses: actions/checkout@v2
 
