@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
-
-sudo apt install postgresql postgresql-contrib
-cat setup-postgresql.sql  | psql -U postgres 
-psql -U postgres -c "select * from customer "
-
+cat setup-postgresql.sql | PGPASSWORD=orders psql -U orders -h localhost orders
 # sudo -i -u postgres
 # sudo -u postgres psql
 # psql -c  "CREATE DATABASE orders;" -U postgres
