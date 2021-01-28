@@ -55,11 +55,10 @@ jobs:
         run: |
           sudo apt-get -y install libcurl3  
           sudo apt-get -y install libcurl-openssl1.0-dev
+          sudo apt-get -y install curl 
           sleep 3
           cd $GITHUB_WORKSPACE/ci/bin
           ./setup-mongodb.sh
-
-
 
       - name: Set up JDK 15
         uses: actions/setup-java@v1
