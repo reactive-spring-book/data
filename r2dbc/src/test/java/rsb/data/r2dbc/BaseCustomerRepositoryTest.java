@@ -18,7 +18,6 @@ import reactor.test.StepVerifier;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-@Slf4j
 @Testcontainers
 public abstract class BaseCustomerRepositoryTest {
 
@@ -61,18 +60,13 @@ public abstract class BaseCustomerRepositoryTest {
 						new Customer(null, "second@email.com"), //
 						new Customer(null, "third@email.com"))) //
 				.flatMap(repository::save); //
-
 		StepVerifier //
 				.create(data) //
 				.expectNextCount(3) //
 				.verifyComplete();
-		log.info("there are (1) " + repository.findAll().collectList().block().size());
 		StepVerifier //
-				.create(repository.findAll().take(1).doOnNext(c -> log.info("the customer is " + c))
-						.flatMap(customer -> repository.deleteById(customer.id())).then())
-
+				.create(repository.findAll().take(1).flatMap(customer -> repository.deleteById(customer.id())).then())
 				.verifyComplete(); //
-		log.info("there are (2) " + repository.findAll().collectList().block().size());
 		StepVerifier //
 				.create(repository.findAll()) //
 				.expectNextCount(2) //
@@ -130,7 +124,7 @@ public abstract class BaseCustomerRepositoryTest {
 				.verifyComplete(); //
 		var email = "test@again.com";
 		StepVerifier //
-				.create(repository.save(new Customer(null, email.toUpperCase(Locale.ROOT))).log()) //
+				.create(repository.save(new Customer(null, email.toUpperCase(Locale.ROOT)))) //
 				.expectNextMatches(p -> p.id() != null) //
 				.verifyComplete();
 		StepVerifier //

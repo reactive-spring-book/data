@@ -46,7 +46,7 @@ abstract public class BaseCustomerServiceTest {
 	public void goodUpsert() throws Exception {
 
 		var validEmail = "a@b.com";
-		var firstWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll()).log();
+		var firstWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(firstWrite).expectNextCount(1).verifyComplete();
 		var secondWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(secondWrite).expectNextCount(1).verifyComplete();
