@@ -1,7 +1,6 @@
 package rsb.data.r2dbc.dbc;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -13,13 +12,12 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-@Log4j2
 public class CustomerRepository implements SimpleCustomerRepository {
 
 	private final DatabaseClient databaseClient;
 
 	private Customer map(Map<String, Object> row) {
-		return new Customer((Integer) row.get("id"), (String) row.get("name"));
+		return new Customer((Integer) row.get("id"), (String) row.get("email"));
 	}
 
 	// <1>
@@ -33,14 +31,22 @@ public class CustomerRepository implements SimpleCustomerRepository {
 	// <2>
 	@Override
 	public Mono<Customer> save(Customer c) {
-		return this.databaseClient.sql("insert into customer ( email ) values( $1  )").bind("$1", c.email()).fetch()
-				.first().as(row -> row.map(this::map));
+		return this.databaseClient //
+				.sql("insert into customer( email ) values( $1  )") //
+				.bind("$1", c.email()) //
+				.filter((stmt, ef) -> stmt.returnGeneratedValues("id").execute()).fetch().first()
+				.flatMap(row -> findById((Integer) row.get("id")));
 	}
 
 	@Override
 	public Mono<Customer> update(Customer c) {
-		return databaseClient.sql("update customer( name) set email =  $1 where id = $2  ").bind("$1", c.email())
-				.bind("$2", c.id()).fetch().first().map(this::map);
+		return databaseClient //
+				.sql(" update customer  set email = $1 where id = $2 ") //
+				.bind("$1", c.email()) //
+				.bind("$2", c.id()) //
+				.fetch() //
+				.first() //
+				.switchIfEmpty(Mono.empty()).then(findById(c.id()));
 	}
 
 	@Override

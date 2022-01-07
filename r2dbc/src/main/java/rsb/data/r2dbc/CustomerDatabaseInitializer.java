@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 @Component
 class CustomerDatabaseInitializer {

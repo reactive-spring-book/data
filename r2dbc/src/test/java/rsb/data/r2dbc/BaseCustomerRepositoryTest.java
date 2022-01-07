@@ -129,21 +129,19 @@ public abstract class BaseCustomerRepositoryTest {
 				.create(this.initializer.resetCustomerTable()) //
 				.verifyComplete(); //
 		var email = "test@again.com";
-		var save = repository.save(new Customer(null, email));
 		StepVerifier //
-				.create(save.log()) //
+				.create(repository.save(new Customer(null, email.toUpperCase(Locale.ROOT))).log()) //
 				.expectNextMatches(p -> p.id() != null) //
 				.verifyComplete();
 		StepVerifier //
 				.create(repository.findAll()) //
 				.expectNextCount(1) //
 				.verifyComplete();
-		var updateFlux = repository //
-				.findAll() //
-				.map(c -> new Customer(c.id(), c.email().toLowerCase(Locale.ROOT))) //
-				.flatMap(repository::update);
 		StepVerifier //
-				.create(updateFlux) //
+				.create(repository //
+						.findAll() //
+						.map(c -> new Customer(c.id(), c.email().toLowerCase(Locale.ROOT))) //
+						.flatMap(repository::update)) //
 				.expectNextMatches(c -> c.email().equals(email.toLowerCase(Locale.ROOT))) //
 				.verifyComplete();
 	}
