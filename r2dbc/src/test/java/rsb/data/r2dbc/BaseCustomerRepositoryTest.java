@@ -50,7 +50,6 @@ public abstract class BaseCustomerRepositoryTest {
 
 	@Test
 	public void delete() {
-
 		var repository = this.getRepository();
 		var data = repository //
 				.findAll() //
@@ -75,23 +74,18 @@ public abstract class BaseCustomerRepositoryTest {
 
 	@Test
 	public void saveAndFindAll() {
-
 		var repository = this.getRepository();
-
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
-
 		var insert = Flux.just( //
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //
 				new Customer(null, "third@email.com")) //
 				.flatMap(repository::save); //
-
 		StepVerifier //
 				.create(insert) //
 				.expectNextCount(2) //
 				.expectNextMatches(customer -> customer.id() != null && customer.id() > 0 && customer.email() != null)
 				.verifyComplete(); //
-
 	}
 
 	@Test
