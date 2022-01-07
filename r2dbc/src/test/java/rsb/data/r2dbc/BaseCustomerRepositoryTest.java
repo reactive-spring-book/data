@@ -1,21 +1,32 @@
 package rsb.data.r2dbc;
 
-import lombok.extern.log4j.Log4j2;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.FileCopyUtils;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.InputStreamReader;
+import java.util.Locale;
 
-@Log4j2
+@Slf4j
+@Testcontainers
 public abstract class BaseCustomerRepositoryTest {
+
+	@DynamicPropertySource
+	static void registerProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.sql.init.mode", () -> "always");
+		registry.add("spring.r2dbc.url", () -> "r2dbc:tc:postgresql://rsbhost/rsb?TC_IMAGE_TAG=9.6.8");
+	}
 
 	// <1>
 	public abstract SimpleCustomerRepository getRepository();
@@ -30,9 +41,9 @@ public abstract class BaseCustomerRepositoryTest {
 
 	private String sql;
 
-	@Before
+	@BeforeEach
 	public void setupResource() throws Exception {
-		Assert.assertTrue(this.resource.exists());
+		Assertions.assertTrue(this.resource.exists());
 		try (var in = new InputStreamReader(this.resource.getInputStream())) {
 			this.sql = FileCopyUtils.copyToString(in);
 		}
@@ -42,7 +53,9 @@ public abstract class BaseCustomerRepositoryTest {
 	public void delete() {
 
 		var repository = this.getRepository();
-		var data = repository.findAll().flatMap(c -> repository.deleteById(c.getId()))
+		var data = repository //
+				.findAll() //
+				.flatMap(c -> repository.deleteById(c.id()))//
 				.thenMany(Flux.just( //
 						new Customer(null, "first@email.com"), //
 						new Customer(null, "second@email.com"), //
@@ -53,12 +66,13 @@ public abstract class BaseCustomerRepositoryTest {
 				.create(data) //
 				.expectNextCount(3) //
 				.verifyComplete();
-
+		log.info("there are (1) " + repository.findAll().collectList().block().size());
 		StepVerifier //
-				.create(repository.findAll().take(1)
-						.flatMap(customer -> repository.deleteById(customer.getId())))
-				.verifyComplete(); //
+				.create(repository.findAll().take(1).doOnNext(c -> log.info("the customer is " + c))
+						.flatMap(customer -> repository.deleteById(customer.id())).then())
 
+				.verifyComplete(); //
+		log.info("there are (2) " + repository.findAll().collectList().block().size());
 		StepVerifier //
 				.create(repository.findAll()) //
 				.expectNextCount(2) //
@@ -81,8 +95,7 @@ public abstract class BaseCustomerRepositoryTest {
 		StepVerifier //
 				.create(insert) //
 				.expectNextCount(2) //
-				.expectNextMatches(customer -> customer.getId() != null
-						&& customer.getId() > 0 && customer.getEmail() != null)
+				.expectNextMatches(customer -> customer.id() != null && customer.id() > 0 && customer.email() != null)
 				.verifyComplete(); //
 
 	}
@@ -97,14 +110,13 @@ public abstract class BaseCustomerRepositoryTest {
 				new Customer(null, "second@email.com"), //
 				new Customer(null, "third@email.com")) //
 				.flatMap(repository::save); //
-		var all = repository.findAll().flatMap(c -> repository.deleteById(c.getId()))
+		var all = repository.findAll().flatMap(c -> repository.deleteById(c.id()))
 				.thenMany(insert.thenMany(repository.findAll()));
 
 		StepVerifier.create(all).expectNextCount(3).verifyComplete();
 
 		var recordsById = repository.findAll()
-				.flatMap(customer -> Mono.zip(Mono.just(customer),
-						repository.findById(customer.getId())))
+				.flatMap(customer -> Mono.zip(Mono.just(customer), repository.findById(customer.id())))
 				.filterWhen(tuple2 -> Mono.just(tuple2.getT1().equals(tuple2.getT2())));
 
 		StepVerifier.create(recordsById).expectNextCount(3).verifyComplete();
@@ -113,16 +125,14 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void update() {
 		var repository = this.getRepository();
-
 		StepVerifier //
 				.create(this.initializer.resetCustomerTable()) //
 				.verifyComplete(); //
-
 		var email = "test@again.com";
 		var save = repository.save(new Customer(null, email));
 		StepVerifier //
-				.create(save) //
-				.expectNextMatches(p -> p.getId() != null) //
+				.create(save.log()) //
+				.expectNextMatches(p -> p.id() != null) //
 				.verifyComplete();
 		StepVerifier //
 				.create(repository.findAll()) //
@@ -130,11 +140,11 @@ public abstract class BaseCustomerRepositoryTest {
 				.verifyComplete();
 		var updateFlux = repository //
 				.findAll() //
-				.map(c -> new Customer(c.getId(), c.getEmail().toUpperCase())) //
+				.map(c -> new Customer(c.id(), c.email().toLowerCase(Locale.ROOT))) //
 				.flatMap(repository::update);
 		StepVerifier //
 				.create(updateFlux) //
-				.expectNextMatches(c -> c.getEmail().equals(email.toUpperCase())) //
+				.expectNextMatches(c -> c.email().equals(email.toLowerCase(Locale.ROOT))) //
 				.verifyComplete();
 	}
 

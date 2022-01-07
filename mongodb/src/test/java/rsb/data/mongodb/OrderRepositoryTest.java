@@ -1,13 +1,15 @@
 package rsb.data.mongodb;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
-import org.junit.runner.RunWith;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -16,33 +18,35 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-//@Ignore
-//@Disabled
+@Testcontainers
 @DataMongoTest
-@RunWith(SpringRunner.class)
-public class OrderRepositoryTest {
+class OrderRepositoryTest {
+
+	@Container
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
+
+	@DynamicPropertySource
+	static void setProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+	}
 
 	@Autowired
 	private OrderRepository orderRepository;
 
-	private final Collection<Order> orders = Arrays.asList(
-			new Order(UUID.randomUUID().toString(), "1"),
-			new Order(UUID.randomUUID().toString(), "2"),
-			new Order(UUID.randomUUID().toString(), "2"));
+	private final Collection<Order> orders = Arrays.asList(new Order(UUID.randomUUID().toString(), "1"), //
+			new Order(UUID.randomUUID().toString(), "2"), //
+			new Order(UUID.randomUUID().toString(), "2")//
+	);
 
-	private final Predicate<Order> predicate = order -> //
-	this.orders //
+	private final Predicate<Order> predicate = order -> this.orders //
 			.stream() //
-			.filter(candidateOrder -> candidateOrder.getId()
-					.equalsIgnoreCase(order.getId()))//
-			.anyMatch(candidateOrder -> candidateOrder.getProductId()
-					.equalsIgnoreCase(order.getProductId()));
+			.filter(candidateOrder -> candidateOrder.id().equalsIgnoreCase(order.id()))//
+			.anyMatch(candidateOrder -> candidateOrder.productId().equalsIgnoreCase(order.productId()));
 
-	@Before
+	@BeforeEach
 	public void before() {
 
-		Flux<Order> saveAll = this.orderRepository.deleteAll()
-				.thenMany(this.orderRepository.saveAll(this.orders));
+		Flux<Order> saveAll = this.orderRepository.deleteAll().thenMany(this.orderRepository.saveAll(this.orders));
 
 		StepVerifier // <1>
 				.create(saveAll) //

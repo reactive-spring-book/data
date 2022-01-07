@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-MONGO_VERSION=4.4.3
+MONGO_VERSION=5.0.3
+#MONGO_VERSION=4.4.3
 mkdir -p downloads
 mkdir -p var/db var/log
 

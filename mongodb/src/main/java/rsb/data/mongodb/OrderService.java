@@ -20,12 +20,10 @@ class OrderService {
 
 	// <1>
 	public Flux<Order> createOrders(String... productIds) {
-		return this.operator
-				.execute(status -> buildOrderFlux(template::insert, productIds));
+		return this.operator.execute(status -> buildOrderFlux(template::insert, productIds));
 	}
 
-	private Flux<Order> buildOrderFlux(Function<Order, Mono<Order>> callback,
-			String[] productIds) {
+	private Flux<Order> buildOrderFlux(Function<Order, Mono<Order>> callback, String[] productIds) {
 		return Flux //
 				.just(productIds) //
 				.map(pid -> {

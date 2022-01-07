@@ -23,6 +23,16 @@
         </dependency>
         <!-- end::spring-boot-dependencies-r2dbc[] -->
 
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>r2dbc</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -23,12 +23,11 @@ class ConnectionManager {
 
 		Function<ConnectionCloseHolder, Publisher<?>> closeFunction = ConnectionCloseHolder::close;
 
-		BiFunction<ConnectionCloseHolder, Throwable, Publisher<?>> closeBiFunction = (
-				connectionCloseHolder,
+		BiFunction<ConnectionCloseHolder, Throwable, Publisher<?>> closeBiFunction = (connectionCloseHolder,
 				throwable) -> closeFunction.apply(connectionCloseHolder);
 
-		return Flux.usingWhen(connection(), holder -> action.apply(holder.connection),
-				closeFunction, closeBiFunction, closeFunction);
+		return Flux.usingWhen(connection(), holder -> action.apply(holder.connection), closeFunction, closeBiFunction,
+				closeFunction);
 	}
 
 	private Mono<ConnectionCloseHolder> connection() {
@@ -61,8 +60,7 @@ class ConnectionManager {
 	}
 
 	private Publisher<Void> closeConnection(Connection connection) {
-		return ConnectionFactoryUtils.currentConnectionFactory(this.connectionFactory)
-				.then()
+		return ConnectionFactoryUtils.currentConnectionFactory(this.connectionFactory).then()
 				.onErrorResume(Exception.class, e -> Mono.from(connection.close()));
 	}
 

@@ -2,6 +2,7 @@ package rsb.data.r2dbc;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public class CustomerService {
 
@@ -26,11 +27,12 @@ public class CustomerService {
 
 	// <1>
 	public Flux<Customer> upsert(String email) {
-		var customers = this.repository.findAll()
-				.filter(customer -> customer.getEmail().equalsIgnoreCase(email))
-				.flatMap(match -> this.repository
-						.update(new Customer(match.getId(), email)))
-				.switchIfEmpty(this.repository.save(new Customer(null, email)));
+		var customers = this.repository//
+				.findAll() //
+				.filter(customer -> customer.email().equalsIgnoreCase(email)) //
+				.flatMap(match -> this.repository.update(new Customer(match.id(), email))) //
+				.switchIfEmpty(this.repository.save(new Customer(null, email)))//
+		;
 		var validatedResults = errorIfEmailsAreInvalid(customers);
 		return this.operator.transactional(validatedResults);
 	}
@@ -38,14 +40,12 @@ public class CustomerService {
 	// <2>
 	@Transactional
 	public Flux<Customer> normalizeEmails() {
-		return errorIfEmailsAreInvalid(this.repository.findAll()
-				.flatMap(x -> this.upsert(x.getEmail().toUpperCase())));
+		return errorIfEmailsAreInvalid(this.repository.findAll().flatMap(x -> this.upsert(x.email().toUpperCase())));
 	}
 
 	private static Flux<Customer> errorIfEmailsAreInvalid(Flux<Customer> input) {
-		return input.filter(c -> c.getEmail().contains("@"))
-				.switchIfEmpty(Mono.error(new IllegalArgumentException(
-						"the email needs to be of the form a@b.com!")));
+		return input.filter(c -> c.email().contains("@")) //
+				.switchIfEmpty(Mono.error(new IllegalArgumentException("the email needs to be of the form a@b.com!")));
 	}
 
 }

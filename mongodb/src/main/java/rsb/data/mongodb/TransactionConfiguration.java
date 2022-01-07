@@ -18,8 +18,7 @@ class TransactionConfiguration {
 
 	// <2>
 	@Bean
-	ReactiveTransactionManager reactiveMongoTransactionManager(
-			ReactiveMongoDatabaseFactory rdf) {
+	ReactiveTransactionManager reactiveMongoTransactionManager(ReactiveMongoDatabaseFactory rdf) {
 		return new ReactiveMongoTransactionManager(rdf);
 	}
 
