@@ -40,7 +40,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build
-        run: cd $GITHUB_WORKSPACE/.github/workflows/ && build.sh
+        run: ls -la $GITHUB_WORKSPACE && \
+          ls -la $GITHUB_WORKSPACE/.github/workflows && \
+          cd $GITHUB_WORKSPACE/.github/workflows/ \
+          && ./build.sh
 
 #      - name: Initiate Pipeline
 #        run: |
