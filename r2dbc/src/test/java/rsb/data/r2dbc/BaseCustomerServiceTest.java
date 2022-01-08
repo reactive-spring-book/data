@@ -29,9 +29,9 @@ abstract public class BaseCustomerServiceTest {
 	private CustomerDatabaseInitializer initializer;
 
 	@BeforeEach
-	public void reset() throws Exception {
-		this.customerRepository = this.getCustomerRepository();
+	public void reset() {
 		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
+		this.customerRepository = getCustomerRepository();
 	}
 
 	@Test
