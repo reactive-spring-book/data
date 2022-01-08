@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - uses: actions/checkout@v2
+
       - name: Warm Up TestContainers
         run: |
           docker pull testcontainers/ryuk:0.3.0
