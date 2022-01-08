@@ -1,6 +1,5 @@
 package rsb.data.r2dbc;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,10 @@ abstract public class BaseCustomerServiceTest {
 
 	@Test
 	public void resetDatabase() {
-
-		var resetAndFind = this.customerRepository.save(new Customer(null, "a@b.com"))
-				.thenMany(this.customerService.resetDatabase()).thenMany(this.customerRepository.findAll());
+		var resetAndFind = this.customerRepository//
+				.save(new Customer(null, "a@b.com")) //
+				.thenMany(this.customerService.resetDatabase())//
+				.thenMany(this.customerRepository.findAll()); //
 		StepVerifier.create(resetAndFind).expectNextCount(0).verifyComplete();
 
 	}

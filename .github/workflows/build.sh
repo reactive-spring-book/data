@@ -4,6 +4,6 @@ cd $GITHUB_WORKSPACE
 echo "Starting build"
 mkdir -p $HOME/.m2/
 cp $GITHUB_WORKSPACE/.ci.settings.xml $HOME/.m2/settings.xml
-mvn -e -f $GITHUB_WORKSPACE/pom.xml clean package
+mvn -e -f $GITHUB_WORKSPACE/pom.xml spring-javaformat:apply clean package
 echo "Stopping build"
 
