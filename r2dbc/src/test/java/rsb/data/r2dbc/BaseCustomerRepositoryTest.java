@@ -2,7 +2,6 @@ package rsb.data.r2dbc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,22 +33,12 @@ public abstract class BaseCustomerRepositoryTest {
 	@Autowired
 	private CustomerDatabaseInitializer initializer;
 
-	// <3>
-	@Value("classpath:/schema.sql")
-	private Resource resource;
-
-	private String sql;
-
 	@BeforeEach
-	public void setupResource() throws Exception {
-		Assertions.assertTrue(this.resource.exists());
-		try (var in = new InputStreamReader(this.resource.getInputStream())) {
-			this.sql = FileCopyUtils.copyToString(in);
-		}
+	public void reset() {
+		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 	}
 
 	@Test
-	@Disabled
 	public void delete() {
 		var repository = this.getRepository();
 		var data = repository //
