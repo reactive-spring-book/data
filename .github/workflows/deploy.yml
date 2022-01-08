@@ -21,26 +21,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Configure PostgreSQL
+      - name: Warm Up TestContainers
         run: |
           docker pull testcontainers/ryuk:0.3.0
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-m2
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build
-        run: cd $GITHUB_WORKSPACE/.github/workflows ; ./build.sh
-
-      - name: Initiate Pipeline
-        run: |
-          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
-              --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
+#
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 17
+#
+#      - name: Cache Maven packages
+#        uses: actions/cache@v1
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-m2
+#          restore-keys: ${{ runner.os }}-m2
+#
+#      - name: Build
+#        run: $GITHUB_WORKSPACE/.github/workflows/build.sh
+#
+#      - name: Initiate Pipeline
+#        run: |
+#          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
+#              --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
