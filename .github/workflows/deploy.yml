@@ -35,8 +35,7 @@ jobs:
 #          --health-retries 5
 
     steps: 
-      - uses: actions/checkout@v2
-#
+
 #      - name : Configure MongoDB
 #        run: |
 #          sudo apt-get -y install curl
@@ -50,6 +49,9 @@ jobs:
 #          echo "select 'hello' " | PGPASSWORD=orders psql -U orders -h localhost orders
 #          cd $GITHUB_WORKSPACE/ci/bin
 #          ./setup-postgresql.sh
+
+      - name: Build
+        run: docker pull testcontainers/ryuk:0.3.0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v1
