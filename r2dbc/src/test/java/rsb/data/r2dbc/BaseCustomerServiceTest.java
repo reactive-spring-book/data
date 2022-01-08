@@ -1,5 +1,6 @@
 package rsb.data.r2dbc;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,11 @@ abstract public class BaseCustomerServiceTest {
 
 	@Test
 	public void goodUpsert() throws Exception {
-
 		var validEmail = "a@b.com";
 		var firstWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(firstWrite).expectNextCount(1).verifyComplete();
 		var secondWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(secondWrite).expectNextCount(1).verifyComplete();
-
 	}
 
 	@Test

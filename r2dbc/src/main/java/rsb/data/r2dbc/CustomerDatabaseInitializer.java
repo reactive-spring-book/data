@@ -34,7 +34,7 @@ class CustomerDatabaseInitializer {
 	}
 
 	public Publisher<Void> resetCustomerTable() {
-		Mono<Void> createSchema = client.sql(this.sql).then().onErrorResume(throwable -> Mono.empty());
+		Mono<Void> createSchema = client.sql(this.sql).then();
 		Flux<Void> findAndDelete = repository.findAll().flatMap(customer -> repository.deleteById(customer.id())); // <7>
 		return createSchema.thenMany(this.transactionalOperator.execute(status -> findAndDelete));
 	}
