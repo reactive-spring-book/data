@@ -2,6 +2,7 @@ package rsb.data.r2dbc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,7 @@ public abstract class BaseCustomerRepositoryTest {
 	}
 
 	@Test
+	@Disabled
 	public void delete() {
 		var repository = this.getRepository();
 		var data = repository //
