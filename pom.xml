@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
     <properties>
-        <testcontainers.version>1.15.0</testcontainers.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
     </properties>
     <modules>
          <module>r2dbc</module>
