@@ -30,8 +30,7 @@ public class CustomerService {
 				.findAll() //
 				.filter(customer -> customer.email().equalsIgnoreCase(email)) //
 				.flatMap(match -> this.repository.update(new Customer(match.id(), email))) //
-				.switchIfEmpty(this.repository.save(new Customer(null, email)))//
-		;
+				.switchIfEmpty(this.repository.save(new Customer(null, email)));//
 		var validatedResults = errorIfEmailsAreInvalid(customers);
 		return this.operator.transactional(validatedResults);
 	}

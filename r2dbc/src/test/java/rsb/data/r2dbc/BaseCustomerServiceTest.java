@@ -25,17 +25,18 @@ abstract public class BaseCustomerServiceTest {
 	@Autowired
 	private CustomerService customerService;
 
-	@Autowired
-	private CustomerDatabaseInitializer initializer;
+	// @Autowired
+	// private CustomerDatabaseInitializer initializer;
 
 	@BeforeEach
 	public void reset() {
-		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 		this.customerRepository = getCustomerRepository();
 	}
 
 	@Test
 	public void badUpsert() throws Exception {
+		StepVerifier.create(this.customerRepository.findAll().flatMap(c -> this.customerRepository.deleteById(c.id())))
+				.verifyComplete();
 		var badEmail = "bad";
 		var firstWrite = this.customerService.upsert(badEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(firstWrite).expectError().verify();
@@ -44,6 +45,8 @@ abstract public class BaseCustomerServiceTest {
 
 	@Test
 	public void goodUpsert() throws Exception {
+		StepVerifier.create(this.customerRepository.findAll().flatMap(c -> this.customerRepository.deleteById(c.id())))
+				.verifyComplete();
 		var validEmail = "a@b.com";
 		var firstWrite = this.customerService.upsert(validEmail).thenMany(this.customerRepository.findAll());
 		StepVerifier.create(firstWrite).expectNextCount(1).verifyComplete();

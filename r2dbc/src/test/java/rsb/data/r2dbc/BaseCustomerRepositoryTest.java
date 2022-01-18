@@ -1,8 +1,6 @@
 package rsb.data.r2dbc;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -15,23 +13,23 @@ import java.util.Locale;
 @Testcontainers
 public abstract class BaseCustomerRepositoryTest {
 
+	// <1>
 	@DynamicPropertySource
 	static void registerProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.sql.init.mode", () -> "always");
 		registry.add("spring.r2dbc.url", () -> "r2dbc:tc:postgresql://rsbhost/rsb?TC_IMAGE_TAG=9.6.8");
 	}
 
-	// <1>
+	// <2>
 	public abstract SimpleCustomerRepository getRepository();
 
-	// <2>
-	@Autowired
-	private CustomerDatabaseInitializer initializer;
-
-	@BeforeEach
-	public void reset() {
-		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
-	}
+	// <3>
+	// @Autowired
+	// private CustomerDatabaseInitializer initializer;
+	/*
+	 * @BeforeEach public void reset() {
+	 * StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete(); }
+	 */
 
 	@Test
 	public void delete() {
@@ -60,7 +58,7 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void saveAndFindAll() {
 		var repository = this.getRepository();
-		StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
+		// StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 		var insert = Flux.just( //
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //
@@ -98,12 +96,10 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void update() {
 		var repository = this.getRepository();
-		StepVerifier //
-				.create(this.initializer.resetCustomerTable()) //
-				.verifyComplete(); //
 		var email = "test@again.com";
 		StepVerifier //
-				.create(repository.save(new Customer(null, email.toUpperCase(Locale.ROOT)))) //
+				.create(repository.findAll().flatMap(c -> repository.deleteById(c.id()))
+						.thenMany(repository.save(new Customer(null, email.toUpperCase(Locale.ROOT)))))//
 				.expectNextMatches(p -> p.id() != null) //
 				.verifyComplete();
 		StepVerifier //
