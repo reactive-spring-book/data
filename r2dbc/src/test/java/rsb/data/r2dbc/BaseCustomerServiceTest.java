@@ -25,9 +25,6 @@ abstract public class BaseCustomerServiceTest {
 	@Autowired
 	private CustomerService customerService;
 
-	// @Autowired
-	// private CustomerDatabaseInitializer initializer;
-
 	@BeforeEach
 	public void reset() {
 		this.customerRepository = getCustomerRepository();

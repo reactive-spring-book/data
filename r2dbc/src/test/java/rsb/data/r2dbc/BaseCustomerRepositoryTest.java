@@ -26,10 +26,6 @@ public abstract class BaseCustomerRepositoryTest {
 	// <3>
 	// @Autowired
 	// private CustomerDatabaseInitializer initializer;
-	/*
-	 * @BeforeEach public void reset() {
-	 * StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete(); }
-	 */
 
 	@Test
 	public void delete() {
