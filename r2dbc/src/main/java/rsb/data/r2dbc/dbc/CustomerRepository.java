@@ -26,7 +26,6 @@ public class CustomerRepository implements SimpleCustomerRepository {
 		return databaseClient.sql("select * from customer").fetch().all().as(rows -> rows.map(this::map));
 	}
 
-	// <2>
 	@Override
 	public Mono<Customer> save(Customer c) {
 		return this.databaseClient //
