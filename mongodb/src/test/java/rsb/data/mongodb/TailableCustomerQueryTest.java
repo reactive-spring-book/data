@@ -1,9 +1,7 @@
 package rsb.data.mongodb;
 
-import com.mongodb.reactivestreams.client.MongoCollection;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TailableCustomerQueryTest {
 
 	@Container
-	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.3");
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -77,7 +75,7 @@ public class TailableCustomerQueryTest {
 				.verifyComplete(); //
 
 		// <6>
-		Thread.sleep(1000);
+		Thread.sleep(1_000);
 		Assertions.assertThat(people).hasSize(4);
 	}
 

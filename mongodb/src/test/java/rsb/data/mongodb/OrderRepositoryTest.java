@@ -1,6 +1,5 @@
 package rsb.data.mongodb;
 
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +9,10 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -23,7 +21,7 @@ import java.util.function.Predicate;
 class OrderRepositoryTest {
 
 	@Container
-	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.3");
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -33,7 +31,8 @@ class OrderRepositoryTest {
 	@Autowired
 	private OrderRepository orderRepository;
 
-	private final Collection<Order> orders = Arrays.asList(new Order(UUID.randomUUID().toString(), "1"), //
+	private final Collection<Order> orders = List.of( //
+			new Order(UUID.randomUUID().toString(), "1"), //
 			new Order(UUID.randomUUID().toString(), "2"), //
 			new Order(UUID.randomUUID().toString(), "2")//
 	);
@@ -46,8 +45,9 @@ class OrderRepositoryTest {
 	@BeforeEach
 	public void before() {
 
-		Flux<Order> saveAll = this.orderRepository.deleteAll().thenMany(this.orderRepository.saveAll(this.orders));
-
+		var saveAll = this.orderRepository//
+				.deleteAll()//
+				.thenMany(this.orderRepository.saveAll(this.orders));
 		StepVerifier // <1>
 				.create(saveAll) //
 				.expectNextMatches(this.predicate) //
