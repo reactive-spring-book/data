@@ -13,7 +13,10 @@
     </parent>
     <modules>
         <module>mongodb</module>
-        <module>r2dbc</module>
+        <module>r2dbc-common</module>
+        <module>r2dbc-common-testing</module>
+        <module>r2dbc-dbc</module>
+        <module>r2dbc-springdata</module>
     </modules>
     <dependencies>
         <dependency>
