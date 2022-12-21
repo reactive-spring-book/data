@@ -54,7 +54,6 @@ public abstract class BaseCustomerRepositoryTest {
 	@Test
 	public void saveAndFindAll() {
 		var repository = this.getRepository();
-		// StepVerifier.create(this.initializer.resetCustomerTable()).verifyComplete();
 		var insert = Flux.just( //
 				new Customer(null, "first@email.com"), //
 				new Customer(null, "second@email.com"), //

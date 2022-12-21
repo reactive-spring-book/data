@@ -1,7 +1,6 @@
 name: Data
 
 env:
-
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   SPRING_PROFILES_ACTIVE: ci
@@ -41,8 +40,3 @@ jobs:
 
       - name: Build
         run: $GITHUB_WORKSPACE/.github/workflows/build.sh
-
-#      - name: Initiate Pipeline
-#        run: |
-#          curl -H "Accept: application/vnd.github.everest-preview+json" -H "Authorization: token ${GH_PAT}"  --request POST  \
-#              --data '{"event_type": "update-code-event" }' https://api.github.com/repos/${PIPELINE_ORG_NAME}/${PIPELINE_REPO_NAME}/dispatches
