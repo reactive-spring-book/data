@@ -44,12 +44,10 @@ public class TailableCustomerQueryTest {
 	public void before() {
 
 		// <1>
-		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024).maxDocuments(100).capped();
-
-		Mono<MongoCollection<Document>> recreateCollection = operations.collectionExists(Order.class)
+		var capped = CollectionOptions.empty().size(1024 * 1024).maxDocuments(100).capped();
+		var recreateCollection = operations.collectionExists(Order.class)
 				.flatMap(exists -> exists ? operations.dropCollection(Customer.class) : Mono.just(exists))
 				.then(operations.createCollection(Customer.class, capped));
-
 		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 
