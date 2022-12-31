@@ -1,13 +1,13 @@
-package rsb.data.mongodb;
+package rsb.data.r2dbc.dbc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MongoDbApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MongoDbApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }

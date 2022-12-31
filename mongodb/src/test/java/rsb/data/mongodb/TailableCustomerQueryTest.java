@@ -1,9 +1,7 @@
 package rsb.data.mongodb;
 
-import com.mongodb.reactivestreams.client.MongoCollection;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TailableCustomerQueryTest {
 
 	@Container
-	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.3");
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -44,12 +42,10 @@ public class TailableCustomerQueryTest {
 	public void before() {
 
 		// <1>
-		CollectionOptions capped = CollectionOptions.empty().size(1024 * 1024).maxDocuments(100).capped();
-
-		Mono<MongoCollection<Document>> recreateCollection = operations.collectionExists(Order.class)
+		var capped = CollectionOptions.empty().size(1024 * 1024).maxDocuments(100).capped();
+		var recreateCollection = operations.collectionExists(Order.class)
 				.flatMap(exists -> exists ? operations.dropCollection(Customer.class) : Mono.just(exists))
 				.then(operations.createCollection(Customer.class, capped));
-
 		StepVerifier.create(recreateCollection).expectNextCount(1).verifyComplete();
 	}
 
@@ -79,7 +75,7 @@ public class TailableCustomerQueryTest {
 				.verifyComplete(); //
 
 		// <6>
-		Thread.sleep(1000);
+		Thread.sleep(1_000);
 		Assertions.assertThat(people).hasSize(4);
 	}
 

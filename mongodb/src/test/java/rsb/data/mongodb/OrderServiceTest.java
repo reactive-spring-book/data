@@ -3,7 +3,6 @@ package rsb.data.mongodb;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
@@ -14,7 +13,6 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @Slf4j
@@ -24,7 +22,7 @@ import reactor.test.StepVerifier;
 public class OrderServiceTest {
 
 	@Container
-	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.3");
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -43,7 +41,7 @@ public class OrderServiceTest {
 	// <2>
 	@BeforeEach
 	public void configureCollectionsBeforeTests() {
-		Mono<Boolean> createIfMissing = template.collectionExists(Order.class) //
+		var createIfMissing = template.collectionExists(Order.class) //
 				.filter(x -> !x) //
 				.flatMap(exists -> template.createCollection(Order.class)) //
 				.thenReturn(true);
@@ -57,7 +55,7 @@ public class OrderServiceTest {
 	@Test
 	public void createOrders() {
 
-		Publisher<Order> orders = this.repository //
+		var orders = this.repository //
 				.deleteAll() //
 				.thenMany(this.service.createOrders("1", "2", "3")) //
 				.thenMany(this.repository.findAll());
@@ -75,7 +73,7 @@ public class OrderServiceTest {
 	}
 
 	private void runTransactionalTest(Flux<Order> ordersInTx) {
-		Publisher<Order> orders = this.repository //
+		var orders = this.repository //
 				.deleteAll() //
 				.thenMany(ordersInTx) //
 				.thenMany(this.repository.findAll());

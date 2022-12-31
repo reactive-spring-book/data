@@ -8,15 +8,15 @@
     <parent>
         <groupId>rsb</groupId>
         <artifactId>parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
         <relativePath/>
     </parent>
-    <properties>
-        <testcontainers.version>1.16.2</testcontainers.version>
-    </properties>
     <modules>
-        <module>r2dbc</module>
         <module>mongodb</module>
+        <module>r2dbc-common</module>
+        <module>r2dbc-common-testing</module>
+        <module>r2dbc-dbc</module>
+        <module>r2dbc-springdata</module>
     </modules>
     <dependencies>
         <dependency>
@@ -29,15 +29,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>5.9.0</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
